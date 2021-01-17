@@ -1,0 +1,51 @@
+<% layout('layouts/boilerplate')%> 
+<div class="row mt-5">
+    <h1 class="text-center">New Hike</h1>
+    <div class="col-md-6 offset-md-3">
+
+        <form action="/hikes" method="POST" novalidate id="hikeForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input class="form-control" type="text" id="title" name="hike[title]" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <input class="form-control" type="text" id="location" name="hike[location]" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" type="text" id="description" name="hike[description]" required></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="images" class="form-label">Photos</label>
+                <input class="form-control" type="file" name="image" id="images" accept=".jpeg, .jpg, .png" multiple>
+                <div class="invalid-feedback">
+                    You can upload no more than 2 images (.jpg, .jpeg, .png only).
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <div class="mb-3 d-grid gap-2">
+                <button class="btn btn-success btn-primary-custom">Add Hike</button>
+                <a class="btn btn-light" href="/hikes">Cancel</a>
+            </div>
+            
+        </form>
+
+    </div>
+</div>
+
+<script src="/script/hikeValidation.js"></script>
+
+

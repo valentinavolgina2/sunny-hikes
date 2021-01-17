@@ -1,0 +1,73 @@
+#cluster-map {
+  width: 100%;
+  /* height: 100%; */
+  height: 700px;
+}
+
+#hike-map {
+  width: 100%;
+  height: 50vh;
+}
+
+.navbar-footer-custom {
+  background-color: #22333b; /*#495057;*/
+}
+
+.btn-primary-custom {
+  background-color: #22333b;
+  border-color: #22333b;
+}
+
+.btn-primary-custom:hover,
+.btn-primary-custom:active,
+.btn-primary-custom:focus {
+  background-color: #5e503f;
+  border-color: #5e503f;
+}
+
+.page-link-custom {
+  color: #22333b;
+}
+
+.page-link-custom:hover {
+  color: #22333b;
+}
+
+.current-page {
+  font-weight: 700;
+}
+
+#carouselBack {
+  background-color: white;
+}
+
+.carouselItem {
+  height: 50vh;
+}
+
+/*
+color: https://coolors.co/0a0908-22333b-f2f4f3-a9927d-5e503f
+
+black: 0a0908
+blue: 22333b
+white: f2f4f3
+light-brown: a9927d
+brown: 5e503f
+
+*/
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

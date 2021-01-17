@@ -1,0 +1,99 @@
+<% layout('layouts/boilerplate')%> 
+
+<div id="cluster-map"></div>
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <form class="row mt-5" action="/hikes" method="GET">
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="location-filter" name="location" placeholder="Seattle WA" value="<%=filter.location%> " aria-label="Location">
+            </div>
+
+            <div class="col-md-3">
+                  <select class="form-select" id="distance-filter" name="distance" aria-label="Distance from location">
+                    <option value="10">10 miles</option>
+                    <option value="50">50 miles</option>
+                    <option value="100">100 miles</option>
+                    <option value="250">250 miles</option>
+                  </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary shadow-none btn-primary-custom">Find Hikes</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-lg-12">
+        <div>
+
+        <h1 class="text-center">
+            <% if(hikes.length === 0) {%>
+                No hikes found.
+            <% } else {%>
+                Hikes within <%=filter.distance%> miles from <%=filter.location%>  
+            <% }%>
+        </h1>
+
+        <div id="row-hike" class="row mt-5">
+        <!-- <% for(let column = 0; column < 3; column++) {%>
+        
+            <div class="col-lg-4 col-md-6 col-hike">
+                <% for(let i = column; i < hikes.length; i=i+3) {%>
+            
+                <div class="card mb-3">
+        
+                    <% if(hikes[i].images.length) {%> 
+                    <img class="img-fluid" src="<%= hikes[i].images[0].url%>" alt="">
+                    <% } else {%>
+                        <img class="img-fluid" src="" alt="">
+                    <% } %> 
+        
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= hikes[i].title%>
+                        </h5>
+                        <p class="card-text">
+                            <%= hikes[i].description.substring(0,200)%>...
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted"><%= hikes[i].location%></small>
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-primary shadow-none btn-primary-custom" href="/hikes/<%= hikes[i]._id%>">Show Details 
+                            </a>
+                        </div>
+                    </div>
+        
+                </div>
+                <% }%> 
+        
+            </div>
+        <% }%>  -->
+        </div>
+        
+        <nav id="pageNav" class="mt-5">
+            <ul id="pageButtons" class="pagination justify-content-center">
+              <li id="previousBtn" class="page-item">
+                <a class="page-link page-link-custom" tabindex="-1">Previous</a>
+              </li>
+              <li id="nextBtn" class="page-item">
+                <a class="page-link page-link-custom">Next</a>
+              </li>
+            </ul>
+        </nav>
+        
+    </div>
+</div>
+</div>
+
+
+<script>
+    const distance = <%-filter.distance%>;
+    const long = <%-filter.long%>;
+    const lat = <%-filter.lat%>;
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+    const hikes = {features: <%- JSON.stringify(hikes) %>}
+</script>
+<script src="/script/clusterMap.js"></script>
+<script src="/script/dom.js"></script>
+<script src="/script/hikes.js"></script>

@@ -1,0 +1,14 @@
+.img-wrap {
+  position: relative;
+}
+.img-wrap .close {
+  position: absolute;
+  top: 35%;
+  right: 40%;
+  z-index: 100;
+}
+
+.img-deleted {
+  opacity: 0.4;
+  z-index: 2;
+}

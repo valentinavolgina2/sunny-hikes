@@ -1,0 +1,142 @@
+<% layout('layouts/boilerplate')%>
+<link rel="stylesheet" href="/style/stars.css">
+
+
+<div class="row mt-5">
+    <div class="col-md-6 offset-md-3">
+
+        <section class="mb-5">
+            <h2 class="mb-3">Photos</h2>
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div id="carouselBack" class="carousel-inner">
+                    <% hike.images.forEach((image, i)=>{%> 
+                  <div class="carouselItem carousel-item <%= i === 0 ? 'active' : ''%> ">
+                    <img src="<%= image.url%>" class="d-block h-100 mx-auto" alt="" >
+                  </div>
+                  <% }) %> 
+                </div>
+                <% if(hike.images.length > 1) { %> 
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </a>
+                <% } %> 
+            </div>
+
+        </section>
+
+        <section class="mb-5">
+            <h2 class="mb-3">Information</h2>
+            <div class="card mb-3">
+                <div class="card-body">
+                <h5 class="card-title"><%= hike.title%></h5>
+                <p class="card-text"><%= hike.description%></p>
+                </div>
+                <ul class="list-group list-group-flush">
+                <li class="list-group-item text-muted"><%= hike.location%></li>
+                </ul>
+            </div>        
+            <% if(currentUser && hike.owner.equals(currentUser._id)) { %> 
+                <form class="d-inline" action="/hikes/<%= hike._id%>?_method=DELETE" method="POST">
+                    <div class="d-grid gap-2">
+                        <a href="/hikes/<%= hike._id%>/edit" class="card-link btn btn-secondary btn-primary-custom">Edit</a>
+                        <button id="delete-hike-btn" class="btn btn-danger shadow-none" >Delete</button>
+                    </div>
+                </form>
+            <% } %> 
+        
+        </section>
+
+        <section id='hike-map' class="mb-5">
+            <h2 class="mb-3">Directions</h2>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="mb-3">Reviews</h2>
+            <% for(let review of hike.reviews) {%> 
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><%=review.owner.username %></h5>
+                        <p class="starability-result" data-rating="<%=review.rating %>">
+                        Rated: <%=review.rating %> stars
+                        </p>
+                        <p class="card-text"><%=review.formatDate %></p>
+                        <p class="card-text"><%=review.body %></p>
+                        <%  if( currentUser && review.owner.equals(currentUser._id))  {%>
+                        <form action="/hikes/<%=hike._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-sm btn-outline-dark shadow-none delete-review-btn" onclick="deleteReview">Delete</button>
+                        </form>
+                        <% } %> 
+                    </div>
+                </div>
+            <% } %> 
+    
+            <nav id="pageNav" class="mt-5">
+                <ul id="pageButtons" class="pagination justify-content-center">
+                <li id="previousBtn" class="page-item">
+                    <a class="page-link page-link-custom" href="/hikes/<%=hike._id%>?page=<%= previousPage%>" tabindex="-1">Previous</a>
+                </li>
+                <li id="nextBtn" class="page-item">
+                    <a class="page-link page-link-custom" href="/hikes/<%=hike._id%>?page=<%=nextPage%>">Next</a>
+                </li>
+                </ul>
+            </nav>
+
+        </section>
+
+        <section>
+            <h2 class="mb-3">Leave a Review</h2>
+            <% if(currentUser){ %> 
+                
+                <form action="/hikes/<%=hike._id%>/reviews" method="POST" class="mb-3 needs-validation" novalidate>
+                    <div class="mb-3">
+                        <fieldset class="starability-basic">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label" for="body">Comment:</label>
+                        <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
+                        <div class="valid-feedback">
+                        Looks good!
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-success btn-primary-custom shadow-none">Submit</button>
+                    </div>
+                </form>
+            <% } else {%> 
+                <p>You need to be logged in to leave a review.</p>
+            <% }%> 
+
+        </section>
+
+    </div>
+
+</div>
+
+<script>
+    const previousPage = <%-previousPage%>;
+    const nextPage = <%-nextPage%>;
+    const path = '/hikes/<%-hike._id%>?page=';
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+    const hike = <%- JSON.stringify(hike) %>
+</script>
+<script src="/script/mapShowPage.js"></script>
+<script src="/script/loadMore.js"></script>
+<script src="/script/editConfirmation.js"></script>

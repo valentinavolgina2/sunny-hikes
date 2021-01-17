@@ -1,0 +1,70 @@
+<% layout('layouts/boilerplate')%> 
+
+<link rel="stylesheet" href="/style/editHike.css">
+
+<div class="row mt-5">
+    <h1 class="text-center">Edit Hike</h1>
+    <div class="col-md-6 offset-md-3">
+
+        <form action="/hikes/<%= hike._id%>?_method=PUT" method="POST" novalidate id="hikeForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input class="form-control shadow-none" type="text" id="title" name="hike[title]" value="<%= hike.title%>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                  </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                
+                <textarea class="form-control shadow-none" type="text" id="description" name="hike[description]" required><%= hike.description%></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                  </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <input class="form-control shadow-none" type="text" id="location" name="hike[location]" value="<%= hike.location%>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                  </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="image">Add Photos</label>
+                <input class="form-control shadow-none" type="file" name="image" id="images" accept=".jpeg, .jpg, .png" multiple>
+                <div class="invalid-feedback">
+                    You can upload no more than 2 images (.jpg, .jpeg, .png only).
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <% hike.images.forEach(function(image,i) { %> 
+                     <div class="img-wrap d-inline-block">
+                        <img src="<%=image.thumbnail%>" class="img-thumbnail" alt="">
+                        <div class="form-check-inline">
+                            <input class="btn-check delete-image shadow-none" type="checkbox" id="img_<%=i%>" name="deleteImages[]" value="<%=image.filename%>" autocomplete="off">
+                        </div>
+                        <label class="btn btn-dark close" for="img_<%=i%>">Delete</label>
+                    </div>
+                    <% }) %> 
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6 mb-3">
+                    <div class="d-grid">
+                        <button class="btn btn-success btn-primary-custom shadow-none">Save Changes</button>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-grid">
+                        <a class="btn btn-secondary" href="/hikes/<%= hike._id%>">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script src="/script/hikeValidation.js"></script>
