@@ -21,7 +21,14 @@
         
         <section class="mb-5">
             <h2 class="mb-3">Photos</h2>
-            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                <ol class="carousel-indicators">
+
+                    <li data-bs-target="#carouselExampleControls" data-bs-slide-to="0" class="active"></li>
+                    <% for(let i = 1; i < hike.images.length; i++){%> 
+                        <li data-bs-target="#carouselExampleControls" data-bs-slide-to=<%=i%>></li>
+                    <% } %> 
+                </ol>
                 <div id="carouselBack" class="carousel-inner">
                     <% if(hike.images.length === 0) {%>
                         <div class="carouselItem carousel-item active">
@@ -40,7 +47,7 @@
                   <span class="visually-hidden">Previous</span>
                 </a>
                 <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="carousel-control-next-icon color-" aria-hidden="true"></span>
                   <span class="visually-hidden">Next</span>
                 </a>
                 <% } %> 

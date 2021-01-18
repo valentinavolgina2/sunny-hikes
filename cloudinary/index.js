@@ -11,7 +11,8 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'YelpHike',
-        allowedFromats: ['jpg', 'jpeg', 'png']
+        allowedFromats: ['jpg', 'jpeg', 'png'],
+        transformation: [{ width: 950, height: 900, crop: "fill", gravity: "auto"}],
     }
 });
 
