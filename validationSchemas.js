@@ -1,5 +1,6 @@
 const BaseJoi = require('joi');
 const sanitizeHtml = require('sanitize-html');
+const passes = require('./models/pass');
 
 const extension = (joi) => ({
     type: 'string',
@@ -27,7 +28,8 @@ module.exports.hikeValidSchema = Joi.object({
     hike: Joi.object({
         title: Joi.string().required().escapeHTML(),
         description: Joi.string().required().escapeHTML(),
-        location: Joi.string().required().escapeHTML()
+        location: Joi.string().required().escapeHTML(),
+        pass: Joi.string().valid(...Object.values(passes))
     }).required(),
     deleteImages: Joi.array()
 })

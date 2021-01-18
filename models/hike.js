@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Review = require('./review')
 const Schema = mongoose.Schema;
 const opts = { toJSON: { virtuals: true } };
+const passes = require('./pass');
 
 const ImageSchema = new Schema({
     url: String,
@@ -37,7 +38,8 @@ const HikeSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Review'
         }
-    ]
+    ],
+    pass: [...Object.values(passes)]
 }, opts);
 
 HikeSchema.virtual('properties.popUpMarkup').get(function () {
