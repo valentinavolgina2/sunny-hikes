@@ -23,7 +23,6 @@ module.exports.isOwner = async (req, res, next) => {
 }
 
 module.exports.validateHike = (req, res, next) => { 
-    
     const { error } = hikeValidSchema.validate(req.body);
     if (error) {
         const message = error.details.map(el => el.message).join(',');

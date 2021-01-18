@@ -29,7 +29,7 @@ module.exports.hikeValidSchema = Joi.object({
         title: Joi.string().required().escapeHTML(),
         description: Joi.string().required().escapeHTML(),
         location: Joi.string().required().escapeHTML(),
-        pass: Joi.string().valid(...Object.values(passes))
+        pass: Joi.string().required().escapeHTML().valid(...Object.values(passes))
     }).required(),
     deleteImages: Joi.array()
 })

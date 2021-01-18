@@ -3,7 +3,7 @@ const { cloudinary } = require('../cloudinary');
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
-
+const passes = require('../models/pass');
 
 module.exports.list = async (req, res) => {
     const location = (req.query.location) ? req.query.location : "Seattle WA";
@@ -34,7 +34,7 @@ module.exports.list = async (req, res) => {
 }
 
 module.exports.getNewForm = (req, res) => {
-    res.render('hikes/new');
+    res.render('hikes/new', {passes: [...Object.values(passes)]});
 }
 
 module.exports.showHike = async (req, res) => {
@@ -76,7 +76,6 @@ module.exports.createHike = async (req, res) => {
     hike.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     hike.owner = req.user._id;
     await hike.save();
-//    console.log(hike);
     req.flash('success', 'Successfully made a new recommendation!');
     res.redirect(`/hikes/${hike._id}`);
 }
@@ -88,7 +87,7 @@ module.exports.getEditForm = async (req, res) => {
         req.flash('error', 'Cannot find that page!');
         return res.redirect('/hikes');
     }
-    res.render('hikes/edit', { hike });
+    res.render('hikes/edit', { hike: hike, passes: [...Object.values(passes)]});
 }
 
 module.exports.updateHike = async (req, res) => { 

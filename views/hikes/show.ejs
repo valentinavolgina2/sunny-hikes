@@ -4,7 +4,21 @@
 
 <div class="row mt-5">
     <div class="col-md-6 offset-md-3">
-
+        <div class="row mb-5">
+            <div class="col-6">
+                <h1 class="mb-3"><%= hike.title%></h1>
+            </div>
+            <div class="col-6 text-end">
+                <% if(currentUser && hike.owner.equals(currentUser._id)) { %> 
+                    <form class="d-inline" action="/hikes/<%= hike._id%>?_method=DELETE" method="POST">
+                        <a href="/hikes/<%= hike._id%>/edit" class="card-link btn btn-secondary btn-primary-custom">Edit</a>
+                        <button id="delete-hike-btn" class="btn btn-outline-danger shadow-none" >Delete</button>
+                    </form>
+                <% } %> 
+            </div>
+            <p>Pass: <%= hike.pass%></p>
+        </div>
+        
         <section class="mb-5">
             <h2 class="mb-3">Photos</h2>
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
@@ -31,28 +45,13 @@
 
         <section class="mb-5">
             <h2 class="mb-3">Information</h2>
-            <div class="card mb-3">
-                <div class="card-body">
-                <h5 class="card-title"><%= hike.title%></h5>
-                <p class="card-text"><%= hike.description%></p>
-                </div>
-                <ul class="list-group list-group-flush">
-                <li class="list-group-item text-muted"><%= hike.location%></li>
-                </ul>
-            </div>        
-            <% if(currentUser && hike.owner.equals(currentUser._id)) { %> 
-                <form class="d-inline" action="/hikes/<%= hike._id%>?_method=DELETE" method="POST">
-                    <div class="d-grid gap-2">
-                        <a href="/hikes/<%= hike._id%>/edit" class="card-link btn btn-secondary btn-primary-custom">Edit</a>
-                        <button id="delete-hike-btn" class="btn btn-danger shadow-none" >Delete</button>
-                    </div>
-                </form>
-            <% } %> 
-        
+            <p><%= hike.description%></p>
         </section>
 
-        <section id='hike-map' class="mb-5">
+        <section class="mb-5">
             <h2 class="mb-3">Directions</h2>
+            <p><%= hike.location%></p>
+            <div id='hike-map'></div>
         </section>
 
         <section class="mb-5">

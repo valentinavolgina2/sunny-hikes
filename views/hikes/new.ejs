@@ -19,6 +19,14 @@
                 </div>
             </div>
             <div class="mb-3">
+                <label class="form-label" for="pass">Pass</label>
+                <select class="form-select shadow-none" id="pass" name="hike[pass]">
+                    <% for(let pass of passes) { %>
+                        <option value="<%=pass%>"><%=pass%></option>
+                    <% } %> 
+                </select>
+            </div>
+            <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
                 <textarea class="form-control" type="text" id="description" name="hike[description]" required></textarea>
                 <div class="valid-feedback">
