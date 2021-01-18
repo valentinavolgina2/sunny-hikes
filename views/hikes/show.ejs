@@ -23,6 +23,11 @@
             <h2 class="mb-3">Photos</h2>
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div id="carouselBack" class="carousel-inner">
+                    <% if(hike.images.length === 0) {%>
+                        <div class="carouselItem carousel-item active">
+                            <img src="https://res.cloudinary.com/dlpn4rtaa/image/upload/v1610948282/YelpHike/noImage_h2tqne.png" class="d-block h-100 mx-auto" alt="" >
+                        </div>
+                    <% } %>  
                     <% hike.images.forEach((image, i)=>{%> 
                   <div class="carouselItem carousel-item <%= i === 0 ? 'active' : ''%> ">
                     <img src="<%= image.url%>" class="d-block h-100 mx-auto" alt="" >

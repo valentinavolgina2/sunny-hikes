@@ -61,7 +61,7 @@ const createPageNavigation = (page) => {
 const createHikeCards = (page) => { 
 
     const hikeContainer = document.getElementById('row-hike');
-    const defaultImg = 'https://res.cloudinary.com/dlpn4rtaa/image/upload/v1610657038/YelpHike/nature1_gm2jwu.jpg';
+    const defaultImg = 'https://res.cloudinary.com/dlpn4rtaa/image/upload/v1610948282/YelpHike/noImage_h2tqne.png';
 
     //delete previous page
     deleteElemets(hikeContainer, "col-hike");
