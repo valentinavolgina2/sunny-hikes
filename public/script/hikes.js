@@ -77,7 +77,7 @@ const createHikeCards = (page) => {
             const img = DomModule.createImage((hikeList[i].images.length) ? hikeList[i].images[0].url : defaultImg, 'A hike photo', 'img-fluid');
 
             const title = DomModule.createTextElement('H5', hikeList[i].title, 'card-title');
-            const description = DomModule.createTextElement('P', hikeList[i].description.substring(0, 200) + "...", 'card-text');
+            const description = DomModule.createTextElement('P', hikeList[i].description.substring(0, 200) + "...", 'card-text', 'multiline-text');
             const location = DomModule.createTextElement('P', `<small class="text-muted">${hikeList[i].location}</small>`, 'card-text');
 
             const detailsBtn = DomModule.createAnchor(`/hikes/${hikeList[i]._id}`, 'Show Details', 'btn', 'btn-primary', 'shadow-none', 'btn-primary-custom');

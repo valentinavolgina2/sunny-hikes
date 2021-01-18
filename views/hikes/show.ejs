@@ -57,7 +57,7 @@
 
         <section class="mb-5">
             <h2 class="mb-3">Information</h2>
-            <p><%= hike.description%></p>
+            <p class="multiline-text"><%= hike.description%></p>
         </section>
 
         <section class="mb-5">
@@ -76,7 +76,7 @@
                         Rated: <%=review.rating %> stars
                         </p>
                         <p class="card-text"><%=review.formatDate %></p>
-                        <p class="card-text"><%=review.body %></p>
+                        <p class="card-text multiline-text"><%=review.body %></p>
                         <%  if( currentUser && review.owner.equals(currentUser._id))  {%>
                         <form action="/hikes/<%=hike._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
                             <button class="btn btn-sm btn-outline-dark shadow-none delete-review-btn" onclick="deleteReview">Delete</button>
@@ -122,7 +122,7 @@
                     
                     <div class="mb-3">
                         <label class="form-label" for="body">Comment:</label>
-                        <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
+                        <textarea class="form-control shadow-none textarea-fit" name="review[body]" id="body" maxlength="1000" required></textarea>
                         <div class="valid-feedback">
                         Looks good!
                         </div>
@@ -148,6 +148,7 @@
     const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
     const hike = <%- JSON.stringify(hike) %>
 </script>
+<script src="/script/textareaFitContent.js"></script>
 <script src="/script/mapShowPage.js"></script>
 <script src="/script/loadMore.js"></script>
 <script src="/script/editConfirmation.js"></script>

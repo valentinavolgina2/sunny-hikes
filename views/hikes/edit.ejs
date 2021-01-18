@@ -9,7 +9,7 @@
         <form action="/hikes/<%= hike._id%>?_method=PUT" method="POST" novalidate id="hikeForm" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
-                <input class="form-control shadow-none" type="text" id="title" name="hike[title]" value="<%= hike.title%>" required>
+                <input class="form-control shadow-none" type="text" id="title" name="hike[title]" value="<%= hike.title%>" maxlength="100" required>
                 <div class="valid-feedback">
                     Looks good!
                   </div>
@@ -29,14 +29,14 @@
             <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
                 
-                <textarea class="form-control shadow-none" type="text" id="description" name="hike[description]" required><%= hike.description%></textarea>
+                <textarea class="form-control shadow-none textarea-fit" type="text" id="description" name="hike[description]" maxlength="1000" required><%= hike.description%></textarea>
                 <div class="valid-feedback">
                     Looks good!
                   </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="location">Location</label>
-                <input class="form-control shadow-none" type="text" id="location" name="hike[location]" value="<%= hike.location%>" required>
+                <input class="form-control shadow-none" type="text" id="location" name="hike[location]" value="<%= hike.location%>" maxlength="100" required>
                 <div class="valid-feedback">
                     Looks good!
                   </div>
@@ -79,4 +79,5 @@
     </div>
 </div>
 
+<script src="/script/textareaFitContent.js"></script>
 <script src="/script/hikeValidation.js"></script>

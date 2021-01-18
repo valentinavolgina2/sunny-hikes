@@ -26,9 +26,9 @@ const Joi = BaseJoi.extend(extension)
 
 module.exports.hikeValidSchema = Joi.object({
     hike: Joi.object({
-        title: Joi.string().required().escapeHTML(),
-        description: Joi.string().required().escapeHTML(),
-        location: Joi.string().required().escapeHTML(),
+        title: Joi.string().max(100, 'utf8').required().escapeHTML(),
+        description: Joi.string().max(1000, 'utf8').required().escapeHTML(),
+        location: Joi.string().max(100, 'utf8').required().escapeHTML(),
         pass: Joi.string().required().escapeHTML().valid(...Object.values(passes))
     }).required(),
     deleteImages: Joi.array()
@@ -36,7 +36,7 @@ module.exports.hikeValidSchema = Joi.object({
 
 module.exports.reviewValidSchema = Joi.object({
     review: Joi.object({
-        body: Joi.string().required().escapeHTML(),
+        body: Joi.string().max(1000, 'utf8').required().escapeHTML(),
         rating: Joi.number().min(0).required()
     }).required()
 })
