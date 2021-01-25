@@ -13,6 +13,7 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200')
 });
 
+//indexes by geometry, weatherUpdate
 const HikeSchema = new Schema({
     title: String,
     description: String,
@@ -39,7 +40,32 @@ const HikeSchema = new Schema({
             ref: 'Review'
         }
     ],
-    pass: [...Object.values(passes)]
+    pass: [...Object.values(passes)],
+    weather: [
+        {
+            day: Date,
+            temperature: {
+                day: Number,
+                night: Number,
+                morning: Number,
+                evening: Number
+            },
+            feels: {
+                day: Number,
+                night: Number,
+                morning: Number,
+                evening: Number
+            },
+            main: String,
+            description: String,
+            precipitationProbability: Number,
+            windSpeed: Number,
+            clouds: Number,
+            snow: Number,
+            rain: Number
+        }
+    ],
+    weatherUpdate: Date
 }, opts);
 
 HikeSchema.virtual('properties.popUpMarkup').get(function () {
@@ -51,7 +77,7 @@ HikeSchema.virtual('properties.popUpMarkup').get(function () {
 
 HikeSchema.post('findOneAndDelete', async function (doc) { 
     if (doc) { 
-        await Review.remove({ _id: { $in: doc.reviews } });
+        await Review.deleteMany({ _id: { $in: doc.reviews } });
     }
 });
 

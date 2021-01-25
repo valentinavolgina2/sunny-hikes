@@ -14,6 +14,9 @@ router.route('/')
 
 router.get('/new', isLoggedIn, hikes.getNewForm);
 
+router.route('/weather')
+    .get(catchAsync(hikes.getWeather))
+
 router.route('/:id')
     .get(catchAsync(hikes.showHike))
     .put(isLoggedIn, isOwner, upload.array('image'), validateHike, catchAsync(hikes.updateHike))

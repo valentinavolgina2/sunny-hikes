@@ -4,6 +4,11 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 const passes = require('../models/pass');
+const weatherKey = process.env.WEATHER_KEY;
+const got = require('got');
+
+const units = 'imperial'; 
+let lastWeatherRequestTime = new Date();
 
 module.exports.list = async (req, res) => {
     const location = (req.query.location) ? req.query.location : "Seattle WA";
@@ -23,6 +28,7 @@ module.exports.list = async (req, res) => {
             }
         }
     ]);
+
 
     //return virtuals
     hikes = hikes.map(d => {
@@ -78,6 +84,7 @@ module.exports.createHike = async (req, res) => {
     await hike.save();
     req.flash('success', 'Successfully made a new recommendation!');
     res.redirect(`/hikes/${hike._id}`);
+
 }
 
 module.exports.getEditForm = async (req, res) => { 
@@ -114,6 +121,40 @@ module.exports.deleteHike = async (req, res) => {
     res.redirect("/hikes");
 }
 
+module.exports.getWeather = async (req, res) => { 
+    
+    if (getMinuteDifference(new Date(), lastWeatherRequestTime) > 2) {
+
+        const MAX_REQUEST = 50;
+        let requests = MAX_REQUEST;
+
+        //new hikes
+        let hikes = await Hike.find({ "weatherUpdate": { "$exists": false } }).limit(requests);
+        for (const hike of hikes) {
+            const result = await updateHikeWeather(hike);
+            console.log(result);
+        }
+        
+        requests = (requests - hikes.length > 0 ) ? requests - hikes.length : 0;
+        hikes = await Hike.find({ "weatherUpdate": { $lt: getDateWithoutTime() }}).limit(requests);
+        for (const hike of hikes) {
+            const result = await updateHikeWeather(hike);
+            console.log(result);
+        }
+    
+        lastWeatherRequestTime = new Date();
+
+        req.flash('success', `Updated weather forecast  for ${MAX_REQUEST - requests} hikes!`);
+        res.redirect("/hikes");
+    
+    } else { 
+        req.flash('error', "Too early to get weather. Wait for 2 minutes!");
+        res.redirect("/hikes");
+    }
+
+
+}
+
 async function getSearchCenter(location) { 
 
     let long; 
@@ -130,5 +171,63 @@ async function getSearchCenter(location) {
 
 function toMeters(miles) {
     return miles * 1609.34;
+}
+
+function getDateWithoutTime() {
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date;
+}
+
+function getMinuteDifference(day1, day2) { 
+    const diffMs = (day1 - day2); // milliseconds 
+    return Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+}
+
+async function updateHikeWeather(hike) { 
+    try {
+        const [long, lat] = hike.geometry.coordinates;
+        // console.log(`long: ${long}`);
+        // console.log(`lat: ${lat}`);
+        const response = await got(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=current,minutely,hourly,alerts&units=${units}&appid=${weatherKey}`);
+
+//        console.log(response.body);
+        const body = JSON.parse(response.body);
+        let forecast = [];
+        body.daily.forEach(day => {
+            const dayForecast = {
+                day: new Date(day.dt * 1000),
+                temperature: {
+                    day: day.temp.day,
+                    night: day.temp.night,
+                    morning: day.temp.morn,
+                    evening: day.temp.eve
+                },
+                feels: {
+                    day: day.feels_like.day,
+                    night: day.feels_like.night,
+                    morning: day.feels_like.morn,
+                    evening: day.feels_like.eve
+                },
+                main: day.weather[0].main,
+                description: day.weather[0].description,
+                precipitationProbability: day.pop,
+                windSpeed: day.wind_speed,
+                clouds: day.clouds,
+                snow: (day.snow) ? day.snow : 0,
+                rain: (day.rain) ? day.rain : 0
+            };
+            forecast.push(dayForecast);
+        });
+        hike.weather = forecast;
+        hike.weatherUpdate = getDateWithoutTime();
+        await hike.save();
+        return true;
+
+//        console.log(forecast);
+    } catch (error) {
+        console.log(error);
+        return false;
+    } 
 }
 

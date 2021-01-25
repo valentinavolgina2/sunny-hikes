@@ -67,6 +67,39 @@
         </section>
 
         <section class="mb-5">
+            <h2 class="mb-3">Weather</h2>
+            <% if(hike.weather) { %> 
+                <div class="row">
+                    <% for (let weather of hike.weather) { %> 
+                    <div class="col-md-4 border">
+                        <div class="row text-center">
+                            <p><%= weather.day.toDateString().split(' ')[0]%></p>
+                        </div>
+                        <div class="row text-center">
+                            <p><%= weather.description%></p>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-3">
+                                <p><%= weather.temperature.morning%> F</p>
+                            </div>
+                            <div class="col-3">
+                                <p><%= weather.temperature.day%> F</p>
+                            </div>
+                            <div class="col-3">
+                                <p><%= weather.temperature.evening%> F</p>
+                            </div>
+                            <div class="col-3">
+                                <p><%= weather.temperature.night%> F</p>
+                            </div>
+                        </div>
+                    </div>
+                    <%  } %> 
+                </div>
+            <%  } %> 
+
+        </section>
+
+        <section class="mb-5">
             <h2 class="mb-3">Reviews</h2>
             <% for(let review of hike.reviews) {%> 
                 <div class="card mb-3">
