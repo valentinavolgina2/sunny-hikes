@@ -7,7 +7,8 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         unique: true
-    }
+    },
+    admin: Boolean
 });
 
 //it gives use unique username and passowrd to the schema

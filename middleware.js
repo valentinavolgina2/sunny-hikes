@@ -12,6 +12,14 @@ module.exports.isLoggedIn = (req, res, next) => {
     next();
 }
 
+module.exports.isAdmin = async (req, res, next) => { 
+    if (!req.user.admin) { 
+        req.flash('error', 'You do not have permission to do that!');
+        return res.redirect('/hikes');;
+    }
+    next();
+}
+
 module.exports.isOwner = async (req, res, next) => { 
     const { id } = req.params;
     let hike = await Hike.findById(id);

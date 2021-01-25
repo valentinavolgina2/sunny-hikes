@@ -3,7 +3,7 @@ const router = express.Router();
 const hikes = require('../controllers/hikes');
 const catchAsync = require('../utils/catchAsync'); // for error catching
 const ExpressError = require('../utils/ExpressError'); // for error catching
-const { validateHike, isLoggedIn, isOwner } = require('../middleware');
+const { validateHike, isLoggedIn, isOwner, isAdmin} = require('../middleware');
 const multer = require('multer');
 const { storage } = require('../cloudinary');
 const upload = multer({ storage });
@@ -15,7 +15,7 @@ router.route('/')
 router.get('/new', isLoggedIn, hikes.getNewForm);
 
 router.route('/weather')
-    .get(catchAsync(hikes.getWeather))
+    .get(isLoggedIn, isAdmin,catchAsync(hikes.getWeather))
 
 router.route('/:id')
     .get(catchAsync(hikes.showHike))
