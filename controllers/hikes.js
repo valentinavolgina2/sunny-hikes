@@ -4,6 +4,7 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 const passes = require('../models/pass');
+const conditions = require('../models/weather');
 const weatherKey = process.env.WEATHER_KEY;
 const got = require('got');
 
@@ -13,6 +14,9 @@ let lastWeatherRequestTime = new Date();
 module.exports.list = async (req, res) => {
     const location = (req.query.location) ? req.query.location : "Seattle WA";
     const distance = (req.query.distance) ? req.query.distance : 250;
+
+    //https://www.sunzala.com/why-the-javascript-date-is-one-day-off/
+    const day = (req.query.date) ? new Date(req.query.date.replace('-', '/')) : new Date();
     const { long, lat } = await getSearchCenter(location);
 
     let hikes = await Hike.aggregate([
@@ -32,10 +36,21 @@ module.exports.list = async (req, res) => {
 
     //return virtuals
     hikes = hikes.map(d => {
-        return new Hike(d);
+        let hike = new Hike(d);
+        if (hike.weather === undefined || hike.weather.length == 0) {
+            hike.weatherMain = 'None';
+        } else { 
+            let filteredWeather = hike.weather.filter(x => (x.day.getUTCDate() === day.getUTCDate() && x.day.getUTCMonth() === day.getUTCMonth() && x.day.getUTCFullYear() === day.getUTCFullYear()));
+//            console.log(filteredWeather[0].day);
+            hike.weatherMain = (filteredWeather && filteredWeather.length > 0) ? String(filteredWeather.map(x => x.main)[0]) : 'None';
+        }
+        
+        return hike;
     });
 
-    res.render('hikes/index', { hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat}});
+    //  console.log({ hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day}, conditions: [...Object.values(conditions)]});
+
+    res.render('hikes/index', { hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day}, conditions: [...Object.values(conditions)]});
 
 }
 
@@ -136,14 +151,15 @@ module.exports.getWeather = async (req, res) => {
         }
         
         requests = (requests - hikes.length > 0 ) ? requests - hikes.length : 0;
-        hikes = await Hike.find({ "weatherUpdate": { $lt: getDateWithoutTime() }}).limit(requests);
+        hikes = await Hike.find({ "weatherUpdate": { $lt: getDateWithoutTime() } }).limit(requests);
+        // hikes = await Hike.find({ "weatherUpdate": { $lt: getDateWithoutTime() } }).limit(requests);
         for (const hike of hikes) {
             const result = await updateHikeWeather(hike);
             console.log(result);
         }
     
         lastWeatherRequestTime = new Date();
-
+        requests = (requests - hikes.length > 0 ) ? requests - hikes.length : 0;
         req.flash('success', `Updated weather forecast  for ${MAX_REQUEST - requests} hikes!`);
         res.redirect("/hikes");
     
@@ -215,7 +231,8 @@ async function updateHikeWeather(hike) {
                 windSpeed: day.wind_speed,
                 clouds: day.clouds,
                 snow: (day.snow) ? day.snow : 0,
-                rain: (day.rain) ? day.rain : 0
+                rain: (day.rain) ? day.rain : 0,
+                icon: day.weather[0].icon
             };
             forecast.push(dayForecast);
         });

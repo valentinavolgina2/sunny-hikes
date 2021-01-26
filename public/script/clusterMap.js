@@ -1,10 +1,43 @@
 mapboxgl.accessToken = mapToken;
 var map = new mapboxgl.Map({
     container: 'cluster-map',
-    style: 'mapbox://styles/mapbox/streets-v11', //light-v10
+    style: 'mapbox://styles/mapbox/dark-v9', //streets-v11', //light-v10
     center: [long, lat], //centered on Seattle
     zoom: getZoom()
 });
+
+// const weatherFilters = document.querySelectorAll('.weather-filter');
+// weatherFilters.forEach(weatherFilter => { 
+//     weatherFilter.addEventListener('change', (event) => { 
+//         const value = weatherFilter.value;
+//         if (weatherFilter.checked) {
+//             weatherCatagories.push([value, 'blue']);
+//         } else { 
+//             weatherCatagories = weatherCatagories.filter(wc => wc[0] !== value);
+//         }
+//         console.log(weatherCatagories);
+//     })
+// });
+
+const weatherCatagories = [
+    ['None', '#35504F'],
+    ['Thunderstorm', '#BC3842'],
+    ['Rain','#216C84'],
+	['Drizzle','#91C1C1'],
+    ['Snow','#F5F8F5'],
+    ['Clouds','#DEB4A9'],
+    ['Clear','#DBC85E'],
+    ['Mist','#7EBDAB'],
+    ['Smoke','#817553'],
+    ['Haze','#7EBDAB'],
+    ['Dust','#817553'],
+    ['Fog','#7EBDAB'],
+    ['Sand','#817553'],
+    ['Ash','#817553'],
+    ['Squall','#BC3842'],
+    ['Tornado','#BC3842']
+];
+
 
 function getZoom() {
     if (distance < 50) {
@@ -18,6 +51,7 @@ function getZoom() {
     }
 }
 
+
 map.addControl(new mapboxgl.NavigationControl());
  
 map.on('load', function () {
@@ -30,53 +64,51 @@ map.on('load', function () {
         // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
         data: hikes,
         cluster: true,
-        clusterMaxZoom: 14, // Max zoom to cluster points on
-        clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+        clusterMaxZoom: 0, // Max zoom to cluster points on
+        clusterRadius: 0 // Radius of each cluster when clustering points (defaults to 50)
     });
+
     
-    map.addLayer({
-        id: 'clusters',
-        type: 'circle',
-        source: 'hikes',
-        filter: ['has', 'point_count'],
-        paint: {
-    // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
-    // with three steps to implement three types of circles:
-    //   * Blue, 20px circles when point count is less than 100
-    //   * Yellow, 30px circles when point count is between 100 and 750
-    //   * Pink, 40px circles when point count is greater than or equal to 750
-            'circle-color': [
-            'step',
-            ['get', 'point_count'],
-            'red',
-            10,
-            'red',
-            30,
-            'red'
-            ],
-            'circle-radius': [
-            'step',
-            ['get', 'point_count'],
-            15,
-            10,
-            25,
-            30,
-            30
-            ]
-        }
-    });
     
-    map.addLayer({
-        id: 'cluster-count',
-        type: 'symbol',
-        source: 'hikes',
-        filter: ['has', 'point_count'],
-        layout: {
-            'text-field': '{point_count_abbreviated}',
-            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-            'text-size': 12
-        }
-    });
+    // map.addLayer({
+    //     id: 'clusters',
+    //     type: 'circle',
+    //     source: 'hikes',
+    //     filter: ['has', 'point_count'],
+    //     paint: {
+    //         'circle-color': [
+    //         'step',
+    //         ['get', 'point_count'],
+    //         'red',
+    //         30,
+    //         'yellow',
+    //         50,
+    //         'blue'
+    //         ],
+    //         'circle-radius': [
+    //         'step',
+    //         ['get', 'point_count'],
+    //         15,
+    //         30,
+    //         25,
+    //         50,
+    //         30
+    //         ]
+    //     }
+    // });
+    
+    // map.addLayer({
+    //     id: 'cluster-count',
+    //     type: 'symbol',
+    //     source: 'hikes',
+    //     filter: ['has', 'point_count'],
+    //     layout: {
+    //         'text-field': '{point_count_abbreviated}',
+    //         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+    //         'text-size': 12
+    //     }
+    // });
+    
     
     map.addLayer({
         id: 'unclustered-point',
@@ -84,12 +116,16 @@ map.on('load', function () {
         source: 'hikes',
         filter: ['!', ['has', 'point_count']],
         paint: {
-            'circle-color': 'red',
             'circle-radius': 10,
-            'circle-stroke-width': 1,
-            'circle-stroke-color': '#fff'
+//            'circle-opacity': 0.9,
+            'circle-color': {
+                property: 'weatherIcon',
+                type: 'categorical',
+                stops: weatherCatagories
+            }
         }
     });
+
     
     // inspect a cluster on click
     map.on('click', 'clusters', function (e) {

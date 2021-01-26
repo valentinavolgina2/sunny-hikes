@@ -102,6 +102,29 @@ const loadPage = (page)=>{
 
 }
 
+const formatDate = (date) => {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+const setWeatherFilter = () => { 
+    const forecastDayFilter = document.getElementById('date-filter');
+    let date = new Date(forecastDay);
+    const todayFormatted = formatDate(date);
+    forecastDayFilter.value = todayFormatted;
+    // forecastDayFilter.min = todayFormatted;
+    // forecastDayFilter.max = formatDate(date.setDate(date.getDate() + 7));
+}
+
 const setDistanceFilter = () => { 
     const distanceFilter = document.getElementById('distance-filter');
     for (let option of distanceFilter.options) { 
@@ -112,7 +135,7 @@ const setDistanceFilter = () => {
 }
 
 function onLoad() { 
-
+    setWeatherFilter();
     setDistanceFilter();
     loadPage(1);
 };

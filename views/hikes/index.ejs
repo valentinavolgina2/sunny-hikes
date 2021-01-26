@@ -1,23 +1,47 @@
 <% layout('layouts/boilerplate')%> 
 
 <div id="cluster-map"></div>
+<!-- <div class="row my-5 mx-5">
+    <div class="col-md-6 form-check">
+        <input class="form-check-input weather-filter" type="checkbox" id="cloudCheck" value="Cloud" checked>
+        <label class="form-check-label" for="cloudCheck">Cloud</label>
+    </div>
+    <div class="col-md-6 form-check">
+        <input class="form-check-input weather-filter" type="checkbox" id="rainCheck" value="Rain" checked>
+        <label class="form-check-label" for="rainCheck">Rain</label>
+    </div>
+</div> -->
+
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <form class="row mt-5" action="/hikes" method="GET">
-            <div class="col-md-6">
-                <input type="text" class="form-control" id="location-filter" name="location" placeholder="Seattle WA" value="<%=filter.location%> " aria-label="Location">
+            <div class="row">
+                <h3>
+                    Weather Filter
+                </h3>
+                <div class="col-md-6">
+                    <input type="date" class="form-control shadow-none" id="date-filter" name="date" placeholder="Seattle WA" aria-label="Weather forecast day" required>
+                </div>                
             </div>
-
-            <div class="col-md-3">
-                  <select class="form-select" id="distance-filter" name="distance" aria-label="Distance from location">
-                    <option value="10">10 miles</option>
-                    <option value="50">50 miles</option>
-                    <option value="100">100 miles</option>
-                    <option value="250">250 miles</option>
-                  </select>
-            </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-primary shadow-none btn-primary-custom">Find Hikes</button>
+            <div class="row">
+                <h3>
+                    Location Filter
+                </h3>
+                <div class="col-md-6">
+                    <input type="text" class="form-control shadow-none" id="location-filter" name="location" placeholder="Seattle WA" value="<%=filter.location%> " aria-label="Location">
+                </div>
+    
+                <div class="col-md-3">
+                      <select class="form-select shadow-none" id="distance-filter" name="distance" aria-label="Distance from location">
+                        <option value="10">10 miles</option>
+                        <option value="50">50 miles</option>
+                        <option value="100">100 miles</option>
+                        <option value="250">250 miles</option>
+                      </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary shadow-none btn-primary-custom">Find Hikes</button>
+                </div>
             </div>
         </form>
     </div>
@@ -91,8 +115,9 @@
     const distance = <%-filter.distance%>;
     const long = <%-filter.long%>;
     const lat = <%-filter.lat%>;
-    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>'
     const hikes = {features: <%- JSON.stringify(hikes) %>}
+    const forecastDay = '<%-filter.forecastDay%>'
 </script>
 <script src="/script/clusterMap.js"></script>
 <script src="/script/dom.js"></script>

@@ -3,6 +3,7 @@ const Review = require('./review')
 const Schema = mongoose.Schema;
 const opts = { toJSON: { virtuals: true } };
 const passes = require('./pass');
+const conditions = require('./weather');
 
 const ImageSchema = new Schema({
     url: String,
@@ -56,16 +57,18 @@ const HikeSchema = new Schema({
                 morning: Number,
                 evening: Number
             },
-            main: String,
+            main: [...Object.values(conditions)],
             description: String,
             precipitationProbability: Number,
             windSpeed: Number,
             clouds: Number,
             snow: Number,
-            rain: Number
+            rain: Number,
+            icon: String
         }
     ],
-    weatherUpdate: Date
+    weatherUpdate: Date,
+    weatherMain: String
 }, opts);
 
 HikeSchema.virtual('properties.popUpMarkup').get(function () {
@@ -73,6 +76,11 @@ HikeSchema.virtual('properties.popUpMarkup').get(function () {
     <strong><a href="/hikes/${this._id}">${this.title}</a></strong>
     <p>${this.description.substring(0,40)}...</p>`
 });
+
+HikeSchema.virtual('properties.weatherIcon').get(function () {
+    return this.weatherMain;
+});
+
 
 
 HikeSchema.post('findOneAndDelete', async function (doc) { 

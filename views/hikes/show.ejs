@@ -1,7 +1,6 @@
 <% layout('layouts/boilerplate')%>
 <link rel="stylesheet" href="/style/stars.css">
 
-
 <div class="row mt-5">
     <div class="col-md-6 offset-md-3">
         <div class="row mb-5">
@@ -76,7 +75,10 @@
                             <p><%= weather.day.toDateString().split(' ')[0]%></p>
                         </div>
                         <div class="row text-center">
-                            <p><%= weather.description%></p>
+                            <div class="col-6 offset-3">
+                                <p><%= weather.description%></p>
+                                <img src="/images/weather/<%=weather.icon%>.png" alt>
+                            </div>
                         </div>
                         <div class="row text-center">
                             <div class="col-3">
