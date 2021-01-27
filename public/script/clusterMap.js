@@ -6,37 +6,41 @@ var map = new mapboxgl.Map({
     zoom: getZoom()
 });
 
-// const weatherFilters = document.querySelectorAll('.weather-filter');
-// weatherFilters.forEach(weatherFilter => { 
-//     weatherFilter.addEventListener('change', (event) => { 
-//         const value = weatherFilter.value;
-//         if (weatherFilter.checked) {
-//             weatherCatagories.push([value, 'blue']);
-//         } else { 
-//             weatherCatagories = weatherCatagories.filter(wc => wc[0] !== value);
-//         }
-//         console.log(weatherCatagories);
-//     })
-// });
+let mapData;
+const loadData = () => { 
 
-const weatherCatagories = [
-    ['None', '#35504F'],
-    ['Thunderstorm', '#BC3842'],
-    ['Rain','#216C84'],
-	['Drizzle','#91C1C1'],
-    ['Snow','#F5F8F5'],
-    ['Clouds','#DEB4A9'],
-    ['Clear','#DBC85E'],
-    ['Mist','#7EBDAB'],
-    ['Smoke','#817553'],
-    ['Haze','#7EBDAB'],
-    ['Dust','#817553'],
-    ['Fog','#7EBDAB'],
-    ['Sand','#817553'],
-    ['Ash','#817553'],
-    ['Squall','#BC3842'],
-    ['Tornado','#BC3842']
-];
+    const forecastDayFilter = document.getElementById('date-filter');
+    const choosenDay = forecastDayFilter.value.replace('/','-');
+
+    mapData = {
+        features: []
+    };
+    for (let hike of hikes.features) {
+
+        const weatherFiltered = hike.weather.filter(x => x.day.slice(0, 10) === choosenDay);
+        let condition = 'None';
+        if (weatherFiltered.length > 0) { 
+            condition = String(weatherFiltered[0].main);
+        }
+        console.log(condition);
+        const feature = {
+            type: "Feature",
+            properties: {
+                weatherIcon: condition,
+                popUpMarkup: hike.properties.popUpMarkup
+            },
+            geometry: {
+                coordinates: hike.geometry.coordinates,
+                type: hike.geometry.type
+            }
+        }
+        mapData.features.push(feature);
+    }
+    
+
+}
+
+loadData();
 
 
 function getZoom() {
@@ -58,11 +62,11 @@ map.on('load', function () {
 // Add a new source from our GeoJSON data and
 // set the 'cluster' option to true. GL-JS will
 // add the point_count property to your source data.
-    map.addSource('hikes', {
+    map.addSource('mapData', {
         type: 'geojson',
         // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
         // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-        data: hikes,
+        data: mapData,
         cluster: true,
         clusterMaxZoom: 0, // Max zoom to cluster points on
         clusterRadius: 0 // Radius of each cluster when clustering points (defaults to 50)
@@ -113,36 +117,35 @@ map.on('load', function () {
     map.addLayer({
         id: 'unclustered-point',
         type: 'circle',
-        source: 'hikes',
+        source: 'mapData',
         filter: ['!', ['has', 'point_count']],
         paint: {
             'circle-radius': 10,
-//            'circle-opacity': 0.9,
             'circle-color': {
                 property: 'weatherIcon',
                 type: 'categorical',
-                stops: weatherCatagories
+                stops: conditionColors
             }
         }
     });
 
     
     // inspect a cluster on click
-    map.on('click', 'clusters', function (e) {
-        const features = map.queryRenderedFeatures(e.point, {layers: ['clusters']});
-        const clusterId = features[0].properties.cluster_id;
-        map.getSource('hikes').getClusterExpansionZoom(
-            clusterId,
-            function (err, zoom) {
-                if (err) return;
+    // map.on('click', 'clusters', function (e) {
+    //     const features = map.queryRenderedFeatures(e.point, {layers: ['clusters']});
+    //     const clusterId = features[0].properties.cluster_id;
+    //     map.getSource('hikes').getClusterExpansionZoom(
+    //         clusterId,
+    //         function (err, zoom) {
+    //             if (err) return;
                 
-                map.easeTo({
-                    center: features[0].geometry.coordinates,
-                    zoom: zoom
-                });
-            }
-        );
-    });
+    //             map.easeTo({
+    //                 center: features[0].geometry.coordinates,
+    //                 zoom: zoom
+    //             });
+    //         }
+    //     );
+    // });
     
     // When a click event occurs on a feature in
     // the unclustered-point layer, open a popup at

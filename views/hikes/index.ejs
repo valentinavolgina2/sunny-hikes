@@ -15,17 +15,32 @@
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <form class="row mt-5" action="/hikes" method="GET">
-            <div class="row">
+            <div class="row mb-3">
                 <h3>
-                    Weather Filter
+                    Weather Conditions
+                </h3>
+                    <% for(let condition of conditions) { %> 
+                    <div class="col-md-4 col-6">
+                        <label class="colored-checkbox-lbl"><%=condition%>
+                            <input class="form-check-input colored-checkbox" type="checkbox" id="<%=condition%>" name="conditionFilter" value="<%=condition%>" <% if(filter.conditions.includes(condition)) { %> checked <% }%>  >
+                            <span class="checkmark checkmark-blue"></span>
+                        </label>
+                        <!-- <label class="form-check-label" for="<%=condition%>"><%=condition%> </label> -->
+                    </div>
+                <% } %> 
+                               
+            </div>
+            <div class="row mb-3">
+                <h3>
+                    Forecast Day
                 </h3>
                 <div class="col-md-6">
                     <input type="date" class="form-control shadow-none" id="date-filter" name="date" placeholder="Seattle WA" aria-label="Weather forecast day" required>
-                </div>                
+                </div> 
             </div>
             <div class="row">
                 <h3>
-                    Location Filter
+                    Location
                 </h3>
                 <div class="col-md-6">
                     <input type="text" class="form-control shadow-none" id="location-filter" name="location" placeholder="Seattle WA" value="<%=filter.location%> " aria-label="Location">
@@ -119,6 +134,6 @@
     const hikes = {features: <%- JSON.stringify(hikes) %>}
     const forecastDay = '<%-filter.forecastDay%>'
 </script>
-<script src="/script/clusterMap.js"></script>
 <script src="/script/dom.js"></script>
 <script src="/script/hikes.js"></script>
+<script src="/script/clusterMap.js"></script>

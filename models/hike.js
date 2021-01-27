@@ -67,8 +67,7 @@ const HikeSchema = new Schema({
             icon: String
         }
     ],
-    weatherUpdate: Date,
-    weatherMain: String
+    weatherUpdate: Date
 }, opts);
 
 HikeSchema.virtual('properties.popUpMarkup').get(function () {
@@ -77,9 +76,6 @@ HikeSchema.virtual('properties.popUpMarkup').get(function () {
     <p>${this.description.substring(0,40)}...</p>`
 });
 
-HikeSchema.virtual('properties.weatherIcon').get(function () {
-    return this.weatherMain;
-});
 
 
 

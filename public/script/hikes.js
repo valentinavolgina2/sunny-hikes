@@ -116,13 +116,61 @@ const formatDate = (date) => {
     return [year, month, day].join('-');
 }
 
+const conditionColors = [
+    ['None', '#35504F'],
+    ['Thunderstorm', '#BC3842'],
+    ['Rain','#216C84'],
+    ['Drizzle','#91C1C1'],
+    ['Snow','#F5F8F5'],
+    ['Clouds','#DEB4A9'],
+    ['Clear','#DBC85E'],
+    ['Mist','#7EBDAB'],
+    ['Smoke','#817553'],
+    ['Haze','#7EBDAB'],
+    ['Dust','#817553'],
+    ['Fog','#7EBDAB'],
+    ['Sand','#817553'],
+    ['Ash','#817553'],
+    ['Squall','#BC3842'],
+    ['Tornado','#BC3842']
+];
+
+const getConditionColor = (condition) => { 
+    for (let condColor of conditionColors) { 
+        if (condColor[0] === condition) { 
+            return condColor[1];
+        }
+    }
+    return '#aaa';
+}
+
+const setColor = (conditionCheckbox) => { 
+    let span = conditionCheckbox.parentNode.getElementsByTagName('span')[0];
+    if (conditionCheckbox.checked === true) {
+        span.style.backgroundColor = getConditionColor(conditionCheckbox.value);
+    } else {
+        span.style.backgroundColor = "#eee";
+    }
+}
+
+const setWeatherConditionColors = () => { 
+    
+    const conditionCheckboxes = document.querySelectorAll('.colored-checkbox');
+    conditionCheckboxes.forEach(conditionCheckbox => {
+        setColor(conditionCheckbox);
+        conditionCheckbox.addEventListener('change', function (e) {
+            setColor(conditionCheckbox);
+        })
+    });
+}
+
 const setWeatherFilter = () => { 
     const forecastDayFilter = document.getElementById('date-filter');
     let date = new Date(forecastDay);
     const todayFormatted = formatDate(date);
     forecastDayFilter.value = todayFormatted;
-    // forecastDayFilter.min = todayFormatted;
-    // forecastDayFilter.max = formatDate(date.setDate(date.getDate() + 7));
+
+    setWeatherConditionColors();
 }
 
 const setDistanceFilter = () => { 

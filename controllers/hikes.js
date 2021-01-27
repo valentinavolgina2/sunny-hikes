@@ -7,9 +7,19 @@ const passes = require('../models/pass');
 const conditions = require('../models/weather');
 const weatherKey = process.env.WEATHER_KEY;
 const got = require('got');
+const moment = require('moment')
+
 
 const units = 'imperial'; 
 let lastWeatherRequestTime = new Date();
+
+function getValues(enumObject){
+    var all = [];
+    for(var key in enumObject){
+       all.push(enumObject[key]);
+    }
+    return all;
+ }
 
 module.exports.list = async (req, res) => {
     const location = (req.query.location) ? req.query.location : "Seattle WA";
@@ -17,8 +27,12 @@ module.exports.list = async (req, res) => {
 
     //https://www.sunzala.com/why-the-javascript-date-is-one-day-off/
     const day = (req.query.date) ? new Date(req.query.date.replace('-', '/')) : new Date();
+    const allConditions = getValues(conditions);
+    let conditionFilter = (req.query.conditionFilter) ? req.query.conditionFilter : allConditions;
+    if (!Array.isArray(conditionFilter)) conditionFilter = [conditionFilter];
     const { long, lat } = await getSearchCenter(location);
 
+    //https://stackoverflow.com/questions/25584279/combine-geonear-query-with-another-query-for-a-value
     let hikes = await Hike.aggregate([
         {
             $geoNear: {
@@ -28,29 +42,32 @@ module.exports.list = async (req, res) => {
                 },
                 distanceField: "dist.calculated",
                 maxDistance: toMeters(distance), //meters
-                spherical: true
-            }
+                spherical: true,
+                query: {
+                    weather: {
+                        $elemMatch: {
+                            main: {$in: conditionFilter}, day: {
+                        $gte: new Date(new Date(day).setHours(00, 00, 00)),
+                        $lt: new Date(new Date(day).setHours(23, 59, 59))
+                         } } }
+                }
+                // query: {
+                //     weather: { $elemMatch: { main: conditions.CLD, day: {
+                //         $gte: new Date(new Date(day).setHours(00, 00, 00)),
+                //         $lt: new Date(new Date(day).setHours(23, 59, 59))
+                //          } } }
+                // }
+             }
         }
     ]);
 
 
     //return virtuals
     hikes = hikes.map(d => {
-        let hike = new Hike(d);
-        if (hike.weather === undefined || hike.weather.length == 0) {
-            hike.weatherMain = 'None';
-        } else { 
-            let filteredWeather = hike.weather.filter(x => (x.day.getUTCDate() === day.getUTCDate() && x.day.getUTCMonth() === day.getUTCMonth() && x.day.getUTCFullYear() === day.getUTCFullYear()));
-//            console.log(filteredWeather[0].day);
-            hike.weatherMain = (filteredWeather && filteredWeather.length > 0) ? String(filteredWeather.map(x => x.main)[0]) : 'None';
-        }
-        
-        return hike;
+        return new Hike(d);
     });
 
-    //  console.log({ hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day}, conditions: [...Object.values(conditions)]});
-
-    res.render('hikes/index', { hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day}, conditions: [...Object.values(conditions)]});
+    res.render('hikes/index', { hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day, conditions: conditionFilter}, conditions: allConditions});
 
 }
 
