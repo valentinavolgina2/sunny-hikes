@@ -35,15 +35,6 @@
   background-color: #ccc;
 }
 
-/* When the checkbox is checked, add a blue background */
-/* .colored-checkbox input:checked ~ .checkmark {
-  background-color: red;
-} */
-
-/* .colored-checkbox input:checked ~ .checkmark-blue {
-  background-color: blue;
-} */
-
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
   content: "";
@@ -54,17 +45,4 @@
 /* Show the checkmark when checked */
 .colored-checkbox-lbl input:checked ~ .checkmark:after {
   display: block;
-}
-
-/* Style the checkmark/indicator */
-.colored-checkbox-lbl .checkmark:after {
-  /* left: 9px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg); */
 }

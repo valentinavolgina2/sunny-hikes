@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const opts = { toJSON: { virtuals: true } };
 const passes = require('./pass');
 const conditions = require('./weather');
+const restrooms = require('./restroom');
 
 const ImageSchema = new Schema({
     url: String,
@@ -42,6 +43,16 @@ const HikeSchema = new Schema({
         }
     ],
     pass: [...Object.values(passes)],
+    facilities: {
+        trail: Boolean,
+        park: Boolean,
+        dogsAllowed: Boolean,
+        beachAccess: Boolean,
+        restrooms: [...Object.values(restrooms)],
+        picnicArea: Boolean,
+        barbeque: Boolean,
+        childrenPlayground: Boolean,
+    },
     weather: [
         {
             day: Date,
@@ -70,12 +81,27 @@ const HikeSchema = new Schema({
     weatherUpdate: Date
 }, opts);
 
-HikeSchema.virtual('properties.popUpMarkup').get(function () {
-    return `
-    <strong><a href="/hikes/${this._id}">${this.title}</a></strong>
-    <p>${this.description.substring(0,40)}...</p>`
+const getFacilities = (hike) => { 
+    return ((hike.facilities.trail) ? "Trail, " : "") +
+        ((hike.facilities.park) ? "Park, " : "") +
+        ((hike.facilities.beachAccess) ? "Beach, " : "") +
+        ((hike.facilities.picnicArea) ? "Picnic area, " : "") +
+        ((hike.facilities.barbeque) ? "Barbeque, " : "") +
+        ((hike.facilities.dogsAllowed) ? "Dogs allowed, " : "No pets, ") +
+        ((hike.facilities.childrenPlayground) ? "Children playground, " : "") +
+        (hike.facilities.restrooms);
+}
+
+HikeSchema.virtual('properties.facility').get(function () {
+    return getFacilities(this);
 });
 
+HikeSchema.virtual('properties.popUpMarkup').get(function () {
+    return getFacilities(this);
+    // return `
+    // <strong><a href="/hikes/${this._id}">${this.title}</a></strong>
+    // <p>${this.description.substring(0,40)}...</p>`
+});
 
 
 

@@ -26,6 +26,56 @@
                     <% } %> 
                 </select>
             </div>
+            <div class="row">
+                <label class="form-label mb-3">Facilities</label>
+                    <div class="col-4">
+                        <div class="mb-3">
+                            <input class="form-check-input shadow-none" type="checkbox" id="typeHike" name="facility[trail]" checked>
+                            <label class="form-check-label" for="typeHike">Trail</label>
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-check-input shadow-none" type="checkbox" id="typePark" name="facility[park]">
+                            <label class="form-check-label" for="typePark">Park</label>
+                        </div>
+                </div>
+                <div class="col-4">
+                        <div class="mb-3">
+                            <input class="form-check-input shadow-none" type="checkbox" id="beach" name="facility[beachAccess]">
+                            <label class="form-check-label" for="beach">Beach access</label>
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-check-input shadow-none" type="checkbox" id="picnic" name="facility[picnicArea]">
+                            <label class="form-check-label" for="picnic">Picnic Area</label>
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-check-input shadow-none" type="checkbox" id="barbeque" name="facility[barbeque]">
+                            <label class="form-check-label" for="barbeque">Barbeque</label>
+                        </div>
+                </div>
+                <div class="col-4">
+                        <div class="mb-3">
+                            <input class="form-check-input shadow-none" type="checkbox" id="children" name="facility[childrenPlayground]">
+                            <label class="form-check-label" for="children">Children Playground</label>
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-check-input shadow-none" type="checkbox" id="dogs" name="facility[dogsAllowed]" checked>
+                            <label class="form-check-label" for="dogs">Dogs are allowed</label>
+                        </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3">
+                    <label class="form-label" for="restrooms">Restrooms</label>
+                    <select class="form-select shadow-none" id="restrooms" name="facility[restrooms]">
+                        <% for(let restroom of restrooms) { %>
+                            <option value="<%=restroom%>"><%=restroom%></option>
+                        <% } %> 
+                    </select>
+                </div>
+            </div>
+
+
             <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
                 <textarea class="form-control textarea-fit shadow-none" type="text" id="description" name="hike[description]" maxlength="1000" required></textarea>
@@ -56,5 +106,6 @@
 
 <script src="/script/textareaFitContent.js"></script>
 <script src="/script/hikeValidation.js"></script>
+<script src="/script/new.js"></script>
 
 

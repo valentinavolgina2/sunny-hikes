@@ -56,6 +56,25 @@
 
         <section class="mb-5">
             <h2 class="mb-3">Information</h2>
+
+            <div class="row my-3">
+                <div class="col-4">
+                    <% if(hike.facilities.trail) { %> <p>Trail</p> <% } %> 
+                    <% if(hike.facilities.park) { %> <p>Park</p> <% } %>
+                    <p>Restrooms: <%=hike.facilities.restrooms%> </p>
+                </div>
+                <div class="col-4">
+                    <% if(hike.facilities.beachAccess) { %> <p>Beach access</p> <% } %> 
+                    <% if(hike.facilities.picnicArea) { %> <p>Picnic Area</p> <% } %>
+                    <% if(hike.facilities.barbeque) { %> <p>Barbeque</p> <% } %> 
+                </div>
+                <div class="col-4">
+                    <% if(hike.facilities.childrenPlayground) { %> <p>Children Playground</p> <% } %> 
+                    <% if(hike.facilities.dogsAllowed) { %> <p>Dogs are allowed</p> <% } else { %> 
+                        <p>Dogs are not allowed</p> <% } %> 
+                </div>
+            </div>
+
             <p class="multiline-text"><%= hike.description%></p>
         </section>
 

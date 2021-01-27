@@ -1,6 +1,7 @@
 const pageList = document.getElementById('pageButtons');
 const hikeList = hikes.features;
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 16;
+const columnsNumber = 6;
 
 const extractPageNumber = (url) => { 
     return parseInt(url.slice(url.indexOf('page')+5));
@@ -66,18 +67,21 @@ const createHikeCards = (page) => {
     //delete previous page
     deleteElemets(hikeContainer, "col-hike");
 
-    for (let column = 0; column < 3; column++) { 
+    for (let column = 0; column < columnsNumber; column++) { 
 
-        const columnDiv = DomModule.createDiv('col-lg-4','col-md-6','col-hike');
+        const columnDiv = DomModule.createDiv('col-xl-2','col-md-4','col-6','col-hike');
 
 
-        for (let i = (page - 1) * PAGE_SIZE + column; i < page * PAGE_SIZE && i < hikeList.length; i=i+3) { 
+        for (let i = (page - 1) * PAGE_SIZE + column; i < page * PAGE_SIZE && i < hikeList.length; i=i+columnsNumber) { 
 
             const card = DomModule.createDiv('card', 'mb-3');
             const img = DomModule.createImage((hikeList[i].images.length) ? hikeList[i].images[0].url : defaultImg, 'A hike photo', 'img-fluid');
 
             const title = DomModule.createTextElement('H5', hikeList[i].title, 'card-title');
-            const description = DomModule.createTextElement('P', hikeList[i].description.substring(0, 200) + "...", 'card-text', 'multiline-text');
+
+            const description = DomModule.createTextElement('P', hikeList[i].properties.facility.substring(0, 200) + "...", 'card-text', 'multiline-text');
+
+            // const description = DomModule.createTextElement('P', hikeList[i].description.substring(0, 200) + "...", 'card-text', 'multiline-text');
             const location = DomModule.createTextElement('P', `<small class="text-muted">${hikeList[i].location}</small>`, 'card-text');
 
             const detailsBtn = DomModule.createAnchor(`/hikes/${hikeList[i]._id}`, 'Show Details', 'btn', 'btn-primary', 'shadow-none', 'btn-primary-custom');

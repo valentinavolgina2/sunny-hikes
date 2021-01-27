@@ -1,6 +1,7 @@
 const BaseJoi = require('joi');
 const sanitizeHtml = require('sanitize-html');
 const passes = require('./models/pass');
+const restrooms = require('./models/restroom');
 
 const extension = (joi) => ({
     type: 'string',
@@ -30,8 +31,17 @@ module.exports.hikeValidSchema = Joi.object({
         description: Joi.string().max(1000, 'utf8').required().escapeHTML(),
         location: Joi.string().max(100, 'utf8').required().escapeHTML(),
         pass: Joi.string().required().escapeHTML().valid(...Object.values(passes))
+        // trail: Joi.boolean(),
+        // park:  Joi.boolean(),
+        // dogsAllowed:  Joi.boolean(),
+        // beachAccess:  Joi.boolean(),
+        // restrooms: Joi.string().required().escapeHTML().valid(...Object.values(restrooms)),
+        // picnicArea:  Joi.boolean(),
+        // barbeque:  Joi.boolean(),
+        // childrenPlayground:  Joi.boolean()
     }).required(),
-    deleteImages: Joi.array()
+    deleteImages: Joi.array(),
+    facility: Joi.object()
 })
 
 module.exports.reviewValidSchema = Joi.object({
