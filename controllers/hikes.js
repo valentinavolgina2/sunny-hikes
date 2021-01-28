@@ -193,39 +193,52 @@ module.exports.deleteHike = async (req, res) => {
     res.redirect("/hikes");
 }
 
+async function updateWeather() { 
+    const MAX_REQUEST = 50;
+    let requests = MAX_REQUEST;
+
+    //new hikes
+    let hikes = await Hike.find({ "weatherUpdate": { "$exists": false } }).limit(requests);
+    for (const hike of hikes) {
+        await updateHikeWeather(hike);
+    }
+    
+    requests = (requests - hikes.length > 0 ) ? requests - hikes.length : 0;
+    hikes = await Hike.find({ "weatherUpdate": { $lt: getDateWithoutTime() } }).limit(requests);
+    for (const hike of hikes) {
+        await updateHikeWeather(hike);
+    }
+
+    lastWeatherRequestTime = new Date();
+    requests = (requests - hikes.length > 0) ? requests - hikes.length : 0;
+    return MAX_REQUEST - requests;
+}
+
+setTimeout(async function getWeatherScheduled() {
+    if (getMinuteDifference(new Date(), lastWeatherRequestTime) > 1) {
+        const updatedHikes = await updateWeather();
+        console.log(lastWeatherRequestTime);
+        console.log(`Updated weather forecast  for ${updatedHikes} hikes!`);
+    
+    } else { 
+        console.log(new Date());
+        console.log("Too early to get weather. Wait for 2 minutes!");
+    }    
+
+    setTimeout(getWeatherScheduled, 1000*60*2); // 2000 = 2sec
+}, 1000 * 60 * 2);
+
+
 module.exports.getWeather = async (req, res) => { 
-    
-    if (getMinuteDifference(new Date(), lastWeatherRequestTime) > 2) {
-
-        const MAX_REQUEST = 50;
-        let requests = MAX_REQUEST;
-
-        //new hikes
-        let hikes = await Hike.find({ "weatherUpdate": { "$exists": false } }).limit(requests);
-        for (const hike of hikes) {
-            const result = await updateHikeWeather(hike);
-            console.log(result);
-        }
-        
-        requests = (requests - hikes.length > 0 ) ? requests - hikes.length : 0;
-        hikes = await Hike.find({ "weatherUpdate": { $lt: getDateWithoutTime() } }).limit(requests);
-        // hikes = await Hike.find({ "weatherUpdate": { $lt: getDateWithoutTime() } }).limit(requests);
-        for (const hike of hikes) {
-            const result = await updateHikeWeather(hike);
-            console.log(result);
-        }
-    
-        lastWeatherRequestTime = new Date();
-        requests = (requests - hikes.length > 0 ) ? requests - hikes.length : 0;
-        req.flash('success', `Updated weather forecast  for ${MAX_REQUEST - requests} hikes!`);
+    if (getMinuteDifference(new Date(), lastWeatherRequestTime) > 1) {
+        const updatedHikes = await updateWeather();
+        req.flash('success', `Updated weather forecast  for ${updatedHikes} hikes!`);
         res.redirect("/hikes");
     
     } else { 
         req.flash('error', "Too early to get weather. Wait for 2 minutes!");
         res.redirect("/hikes");
     }
-
-
 }
 
 async function getSearchCenter(location) { 
