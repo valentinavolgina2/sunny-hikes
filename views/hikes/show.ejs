@@ -124,11 +124,17 @@
             <% for(let review of hike.reviews) {%> 
                 <div class="card mb-3">
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="starability-result" data-rating="<%=review.rating %>">
+                                    Rated: <%=review.rating %> stars
+                                    </p>
+                            </div>
+                            <div class="col-6 text-end">
+                                <p class="card-text"><%=review.formatDate %></p>
+                            </div>
+                        </div>
                         <h5 class="card-title"><%=review.owner.username %></h5>
-                        <p class="starability-result" data-rating="<%=review.rating %>">
-                        Rated: <%=review.rating %> stars
-                        </p>
-                        <p class="card-text"><%=review.formatDate %></p>
                         <p class="card-text multiline-text"><%=review.body %></p>
                         <%  if( currentUser && review.owner.equals(currentUser._id))  {%>
                         <form action="/hikes/<%=hike._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">

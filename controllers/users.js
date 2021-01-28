@@ -31,7 +31,6 @@ module.exports.login = (req, res) => {
     req.flash('success', 'Welcome back!');
     const redirectUrl = req.session.returnTo || '/hikes';
     delete req.session.returnTo;
-//    res.redirect(307, redirectUrl);
     res.redirect(redirectUrl);
 }
 
