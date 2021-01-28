@@ -1,7 +1,7 @@
 mapboxgl.accessToken = mapToken;
 var map = new mapboxgl.Map({
     container: 'cluster-map',
-    style: 'mapbox://styles/mapbox/dark-v9', //streets-v11', //light-v10
+    style: 'mapbox://styles/mapbox/streets-v11',   //dark-v9', //streets-v11', //light-v10
     center: [long, lat], //centered on Seattle
     zoom: getZoom()
 });
@@ -22,7 +22,6 @@ const loadData = () => {
         if (weatherFiltered.length > 0) { 
             condition = String(weatherFiltered[0].main);
         }
-        console.log(condition);
         const feature = {
             type: "Feature",
             properties: {
@@ -121,6 +120,8 @@ map.on('load', function () {
         filter: ['!', ['has', 'point_count']],
         paint: {
             'circle-radius': 10,
+            'circle-stroke-color': 'black',
+            'circle-stroke-width': 1,
             'circle-color': {
                 property: 'weatherIcon',
                 type: 'categorical',

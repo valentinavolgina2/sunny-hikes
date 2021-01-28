@@ -81,41 +81,7 @@
             <% }%>
         </h1>
 
-        <div id="row-hike" class="row mt-5">
-        <!-- <% for(let column = 0; column < 3; column++) {%>
-        
-            <div class="col-lg-4 col-md-6 col-hike">
-                <% for(let i = column; i < hikes.length; i=i+3) {%>
-            
-                <div class="card mb-3">
-        
-                    <% if(hikes[i].images.length) {%> 
-                    <img class="img-fluid" src="<%= hikes[i].images[0].url%>" alt="">
-                    <% } else {%>
-                        <img class="img-fluid" src="" alt="">
-                    <% } %> 
-        
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%= hikes[i].title%>
-                        </h5>
-                        <p class="card-text">
-                            <%= hikes[i].description.substring(0,200)%>...
-                        </p>
-                        <p class="card-text">
-                            <small class="text-muted"><%= hikes[i].location%></small>
-                        </p>
-                        <div class="d-grid gap-2">
-                            <a class="btn btn-primary shadow-none btn-primary-custom" href="/hikes/<%= hikes[i]._id%>">Show Details 
-                            </a>
-                        </div>
-                    </div>
-        
-                </div>
-                <% }%> 
-        
-            </div>
-        <% }%>  -->
+        <div id="row-hike" class="row mt-5 px-0">
         </div>
         
         <nav id="pageNav" class="mt-5">

@@ -69,7 +69,7 @@ const createHikeCards = (page) => {
 
     for (let column = 0; column < columnsNumber; column++) { 
 
-        const columnDiv = DomModule.createDiv('col-xl-2','col-md-4','col-6','col-hike');
+        const columnDiv = DomModule.createDiv('col-xl-2','col-md-4','col-6','col-hike','px-1');
 
 
         for (let i = (page - 1) * PAGE_SIZE + column; i < page * PAGE_SIZE && i < hikeList.length; i=i+columnsNumber) { 
@@ -85,7 +85,7 @@ const createHikeCards = (page) => {
             const location = DomModule.createTextElement('P', `<small class="text-muted">${hikeList[i].location}</small>`, 'card-text');
 
             const detailsBtn = DomModule.createAnchor(`/hikes/${hikeList[i]._id}`, 'Show Details', 'btn', 'btn-primary', 'shadow-none', 'btn-primary-custom');
-            const detailsContainer = DomModule.createDiv('d-grid', 'gap-2');
+            const detailsContainer = DomModule.createDiv('d-grid');
             DomModule.appendChildren(detailsContainer, detailsBtn);
 
             const cardBody = DomModule.createDiv('card-body');
@@ -152,8 +152,12 @@ const setColor = (conditionCheckbox) => {
     let span = conditionCheckbox.parentNode.getElementsByTagName('span')[0];
     if (conditionCheckbox.checked === true) {
         span.style.backgroundColor = getConditionColor(conditionCheckbox.value);
+        span.classList.add('border');
+        span.classList.add('border-dark');
     } else {
-        span.style.backgroundColor = "#eee";
+        span.style.backgroundColor = "#c0c0c0";
+        span.classList.remove('border');
+        span.classList.remove('border-dark');
     }
 }
 

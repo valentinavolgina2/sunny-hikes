@@ -32,6 +32,36 @@ module.exports.list = async (req, res) => {
     const { long, lat } = await getSearchCenter(location);
 
     //https://stackoverflow.com/questions/25584279/combine-geonear-query-with-another-query-for-a-value
+    let query;
+    if (conditionFilter.includes(conditions.NONE)) {
+        query = {
+            $or: [{ "weather.1": { $exists: false } }, {
+                weather: {
+                    $elemMatch: {
+                        main: { $in: conditionFilter }, day: {
+                            $gte: new Date(new Date(day).setHours(00, 00, 00)),
+                            $lt: new Date(new Date(day).setHours(23, 59, 59))
+                        }
+                    }
+                }
+            }]
+            
+        };
+    } else { 
+        query = {
+            $and: [{ "weather.1": { $exists: true } }, {
+                weather: {
+                    $elemMatch: {
+                        main: { $in: conditionFilter }, day: {
+                            $gte: new Date(new Date(day).setHours(00, 00, 00)),
+                            $lt: new Date(new Date(day).setHours(23, 59, 59))
+                        }
+                    }
+                }
+            }]
+            
+        }
+    }
     let hikes = await Hike.aggregate([
         {
             $geoNear: {
@@ -42,24 +72,10 @@ module.exports.list = async (req, res) => {
                 distanceField: "dist.calculated",
                 maxDistance: toMeters(distance), //meters
                 spherical: true,
-                query: {
-                    weather: {
-                        $elemMatch: {
-                            main: {$in: conditionFilter}, day: {
-                        $gte: new Date(new Date(day).setHours(00, 00, 00)),
-                        $lt: new Date(new Date(day).setHours(23, 59, 59))
-                         } } }
-                }
-                // query: {
-                //     weather: { $elemMatch: { main: conditions.CLD, day: {
-                //         $gte: new Date(new Date(day).setHours(00, 00, 00)),
-                //         $lt: new Date(new Date(day).setHours(23, 59, 59))
-                //          } } }
-                // }
-             }
+                query: query
+            }
         }
     ]);
-
 
     //return virtuals
     hikes = hikes.map(d => {
@@ -255,24 +271,20 @@ async function updateHikeWeather(hike) {
             const dayForecast = {
                 day: new Date(day.dt * 1000),
                 temperature: {
-                    day: day.temp.day,
-                    night: day.temp.night,
-                    morning: day.temp.morn,
-                    evening: day.temp.eve
-                },
-                feels: {
-                    day: day.feels_like.day,
-                    night: day.feels_like.night,
-                    morning: day.feels_like.morn,
-                    evening: day.feels_like.eve
+                    day: Math.round(day.temp.day),
+                    night: Math.round(day.temp.night),
+                    morning: Math.round(day.temp.morn),
+                    evening: Math.round(day.temp.eve),
+                    min: Math.round(day.temp.min),
+                    max: Math.round(day.temp.max)
                 },
                 main: day.weather[0].main,
                 description: day.weather[0].description,
-                precipitationProbability: day.pop,
-                windSpeed: day.wind_speed,
+                precipitationProbability: Math.round(day.pop),
+                windSpeed: Math.round(day.wind_speed),
                 clouds: day.clouds,
                 snow: (day.snow) ? day.snow : 0,
-                rain: (day.rain) ? day.rain : 0,
+                rain: (day.rain) ? Math.round(day.rain) : 0,
                 icon: day.weather[0].icon
             };
             forecast.push(dayForecast);

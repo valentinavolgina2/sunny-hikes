@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="/style/stars.css">
 
 <div class="row mt-5">
-    <div class="col-md-6 offset-md-3">
+    <div class="col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
         <div class="row mb-5">
             <div class="col-6">
                 <h1 class="mb-3"><%= hike.title%></h1>
@@ -86,32 +86,31 @@
 
         <section class="mb-5">
             <h2 class="mb-3">Weather</h2>
-            <% if(hike.weather) { %> 
+            <% if(hike.weather) { %>
+                <% let tomorrow =  new Date()%>
+                <% tomorrow.setDate(tomorrow.getDate() + 1) %> 
                 <div class="row">
                     <% for (let weather of hike.weather) { %> 
-                    <div class="col-md-4 border">
-                        <div class="row text-center">
+                    <div class="col-lg-3 col-md-4 col-6 border">
+                        <div class="row text-center mt-2">
+                            <% if(weather.day.toDateString() == (new Date().toDateString())) { %> <p>Today</p>
+                            <% } else if(weather.day.toDateString() == (tomorrow.toDateString())) {  %>
+                            <p>Tomorrow</p>
+                            <% } else { %> 
                             <p><%= weather.day.toDateString().split(' ')[0]%></p>
+                            <% }   %>
+                                 
                         </div>
                         <div class="row text-center">
                             <div class="col-6 offset-3">
-                                <p><%= weather.description%></p>
                                 <img src="/images/weather/<%=weather.icon%>.png" alt>
                             </div>
                         </div>
                         <div class="row text-center">
-                            <div class="col-3">
-                                <p><%= weather.temperature.morning%> F</p>
-                            </div>
-                            <div class="col-3">
-                                <p><%= weather.temperature.day%> F</p>
-                            </div>
-                            <div class="col-3">
-                                <p><%= weather.temperature.evening%> F</p>
-                            </div>
-                            <div class="col-3">
-                                <p><%= weather.temperature.night%> F</p>
-                            </div>
+                            <p><%= weather.temperature.min%>&deg;F / <%= weather.temperature.max%>&deg;F</p>
+                        </div>
+                        <div class="row text-center">
+                            <p><%= weather.description%></p>
                         </div>
                     </div>
                     <%  } %> 
