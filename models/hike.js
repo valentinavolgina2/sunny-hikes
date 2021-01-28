@@ -97,10 +97,15 @@ HikeSchema.virtual('properties.facility').get(function () {
 });
 
 HikeSchema.virtual('properties.popUpMarkup').get(function () {
-    return getFacilities(this);
-    // return `
-    // <strong><a href="/hikes/${this._id}">${this.title}</a></strong>
-    // <p>${this.description.substring(0,40)}...</p>`
+
+    const imageUrl = (this.images.length) ? this.images[0].thumbnail : 'https://res.cloudinary.com/dlpn4rtaa/image/upload/v1610948282/YelpHike/noImage_h2tqne.png';
+
+    return `
+    <strong><a href="/hikes/${this._id}">${this.title}</a></strong>
+    <img  src = ${ imageUrl.replace('/upload', '/upload/w_150')} alt="">
+    <p class="multiline-text">${getFacilities(this)}</p>`
+
+        
 });
 
 

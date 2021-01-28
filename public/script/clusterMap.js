@@ -162,7 +162,7 @@ map.on('load', function () {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
     
-        new mapboxgl.Popup()
+        new mapboxgl.Popup({anchor: 'center'})
         .setLngLat(coordinates)
         .setHTML(text)
         .addTo(map);

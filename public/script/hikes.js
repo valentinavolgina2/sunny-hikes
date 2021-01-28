@@ -79,7 +79,7 @@ const createHikeCards = (page) => {
 
             const title = DomModule.createTextElement('H5', hikeList[i].title, 'card-title');
 
-            const description = DomModule.createTextElement('P', hikeList[i].properties.facility.substring(0, 200) + "...", 'card-text', 'multiline-text');
+            const description = DomModule.createTextElement('P', hikeList[i].properties.facility, 'card-text', 'multiline-text');
 
             // const description = DomModule.createTextElement('P', hikeList[i].description.substring(0, 200) + "...", 'card-text', 'multiline-text');
             const location = DomModule.createTextElement('P', `<small class="text-muted">${hikeList[i].location}</small>`, 'card-text');
