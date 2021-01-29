@@ -1,6 +1,8 @@
 # sunny-seattle
-Yelp-like website that is dedicated to find hikes with sunny forecast.
-The project was built upon "YelpCamp" project from Web Developer Bootcamp by Colt Steele.
+The website is dedicated to find hikes with a particular weather conditions.
+Users choose location, distance, date and preferable weather conditions. App shows hikes within chosen area with specified weather conditions on the 
+particular day. Later I plan to add filter by type of location (park, hike) and facilities it offers (beach access, barbeque, picnick area, childran playground, pets restrictions).
+*The project was built upon "YelpCamp" project from Web Developer Bootcamp by Colt Steele.
 
 # Main database
 I use MongoDB as the main database.
@@ -35,8 +37,17 @@ So, it seems to me a better idea to make a pagination on the server rather than 
 
 
 # Weather Forecast API - need to decide
-- Need to get a forecast for a particular location today.
-- To minimize weather request costs, I need to store found location weather forecast at some database.
-When I need a weather forecast for a particular location, I first go to this database and check if there is a forecast for this location updated today.
-I there is one, I get it, otherwise I make a request to a Weather Forecast API and store the received data in the database.
+## What I want
+- Need to get a forecast for a particular location for 1 week.
+- To give more accurate forecast, I need to update it daily.
+- Minimize weather request costs. Free package limitations: 60 requests a mininute, 1 000 000 requests a month.
 - Another important thing to consider: for a certain location, there can be several hikes in the area. I don't want to check weather for all of them.
+
+## How it is implemented
+- I check forecast daily for all the hikes and write it into the database.
+- To meet the restriction 60 requests per minute, I update up to 60 hikes every 2 minutes.
+- I update weather for hikes that are new or have weather updated earlier that today.
+- For Seattle area I expect to have no more than 1000 hikes and parks. If I update 60 hikes every 2 minutes, I can update 1000 locations in 1 hour.
+1000 hikes updated daily give me 1000x30 = 30 000 requests per a month.
+
+
