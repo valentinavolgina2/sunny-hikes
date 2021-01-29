@@ -124,22 +124,10 @@ module.exports.createHike = async (req, res) => {
         limit: 1
     }).send();
 
-    
-
     const hike = new Hike(req.body.hike);
     hike.geometry = geoData.body.features[0].geometry;
     hike.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     hike.owner = req.user._id;
-
-    const  facility  = req.body.facility;
-    hike.facilities.trail = (facility.trail) ? true : false;
-    hike.facilities.park = (facility.park) ? true : false;
-    hike.facilities.beachAccess = (facility.beachAccess) ? true : false;
-    hike.facilities.picnicArea = (facility.picnicArea) ? true : false;
-    hike.facilities.barbeque = (facility.barbeque) ? true : false;
-    hike.facilities.childrenPlayground = (facility.childrenPlayground) ? true : false;
-    hike.facilities.dogsAllowed = (facility.dogsAllowed) ? true : false;
-    hike.facilities.restrooms = facility.restrooms;
 
     await hike.save();
     req.flash('success', 'Successfully made a new recommendation!');
@@ -162,17 +150,6 @@ module.exports.updateHike = async (req, res) => {
     const hike = await Hike.findByIdAndUpdate(id, { ...req.body.hike });
     const addedImages = req.files.map(f => ({ url: f.path, filename: f.filename }));
     hike.images.push(...addedImages);
-
-    const  facility  = req.body.facility;
-    hike.facilities.trail = (facility.trail) ? true : false;
-    hike.facilities.park = (facility.park) ? true : false;
-    hike.facilities.beachAccess = (facility.beachAccess) ? true : false;
-    hike.facilities.picnicArea = (facility.picnicArea) ? true : false;
-    hike.facilities.barbeque = (facility.barbeque) ? true : false;
-    hike.facilities.childrenPlayground = (facility.childrenPlayground) ? true : false;
-    hike.facilities.dogsAllowed = (facility.dogsAllowed) ? true : false;
-    hike.facilities.restrooms = facility.restrooms;
-
 
     await hike.save();
     if (req.body.deleteImages) { 

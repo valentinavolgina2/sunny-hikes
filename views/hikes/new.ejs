@@ -30,36 +30,36 @@
                 <label class="form-label mb-3">Facilities</label>
                     <div class="col-4">
                         <div class="mb-3">
-                            <input class="form-check-input shadow-none" type="checkbox" id="typeHike" name="facility[trail]" checked>
-                            <label class="form-check-label" for="typeHike">Trail</label>
+                            <input class="form-check-input shadow-none facility" type="checkbox" id="trail" checked>
+                            <label class="form-check-label" for="trail">Trail</label>
                         </div>
                         <div class="mb-3">
-                            <input class="form-check-input shadow-none" type="checkbox" id="typePark" name="facility[park]">
-                            <label class="form-check-label" for="typePark">Park</label>
+                            <input class="form-check-input shadow-none facility" type="checkbox" id="park">
+                            <label class="form-check-label" for="park">Park</label>
                         </div>
                 </div>
                 <div class="col-4">
                         <div class="mb-3">
-                            <input class="form-check-input shadow-none" type="checkbox" id="beach" name="facility[beachAccess]">
-                            <label class="form-check-label" for="beach">Beach access</label>
+                            <input class="form-check-input shadow-none facility" type="checkbox" id="beachAccess">
+                            <label class="form-check-label" for="beachAccess">Beach access</label>
                         </div>
                         <div class="mb-3">
-                            <input class="form-check-input shadow-none" type="checkbox" id="picnic" name="facility[picnicArea]">
-                            <label class="form-check-label" for="picnic">Picnic Area</label>
+                            <input class="form-check-input shadow-none facility" type="checkbox" id="picnicArea">
+                            <label class="form-check-label" for="picnicArea">Picnic Area</label>
                         </div>
                         <div class="mb-3">
-                            <input class="form-check-input shadow-none" type="checkbox" id="barbeque" name="facility[barbeque]">
+                            <input class="form-check-input shadow-none facility" type="checkbox" id="barbeque">
                             <label class="form-check-label" for="barbeque">Barbeque</label>
                         </div>
                 </div>
                 <div class="col-4">
                         <div class="mb-3">
-                            <input class="form-check-input shadow-none" type="checkbox" id="children" name="facility[childrenPlayground]">
-                            <label class="form-check-label" for="children">Children Playground</label>
+                            <input class="form-check-input shadow-none facility" type="checkbox" id="childrenPlayground">
+                            <label class="form-check-label" for="childrenPlayground">Children Playground</label>
                         </div>
                         <div class="mb-3">
-                            <input class="form-check-input shadow-none" type="checkbox" id="dogs" name="facility[dogsAllowed]" checked>
-                            <label class="form-check-label" for="dogs">Dogs are allowed</label>
+                            <input class="form-check-input shadow-none facility" type="checkbox" id="dogsAllowed" checked>
+                            <label class="form-check-label" for="dogsAllowed">Dogs are allowed</label>
                         </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
             <div class="row">
                 <div class="mb-3">
                     <label class="form-label" for="restrooms">Restrooms</label>
-                    <select class="form-select shadow-none" id="restrooms" name="facility[restrooms]">
+                    <select class="form-select shadow-none" id="restrooms" name="hike[facilities][restrooms]">
                         <% for(let restroom of restrooms) { %>
                             <option value="<%=restroom%>"><%=restroom%></option>
                         <% } %> 
@@ -107,5 +107,6 @@
 <script src="/script/textareaFitContent.js"></script>
 <script src="/script/hikeValidation.js"></script>
 <script src="/script/new.js"></script>
+<script src="/script/facility.js"></script>
 
 
