@@ -1,71 +1,78 @@
 <% layout('layouts/boilerplate')%> 
 
-<div class="accordion " id="accordionExample">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingOne">
-        <button class="accordion-button  shadow-none text-dark bg-light border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Filter
-        </button>
-      </h2>
-      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-        <div class="accordion-body">
+<div class="row mt-5 mx-3">
+    <form class="row mt-5" action="/hikes" method="GET">
+        <div class="col-xl-9 col-md-8 mb-3">
             <div class="row">
-                <form class="row mt-5" action="/hikes" method="GET">
-                    <div class="col-md-8 mb-5">
-                        <h3 class="mb-3">
-                            Weather Conditions
-                        </h3>
-                        <div class="row">
-                            <% for(let condition of conditions) { %> 
-                            <div class="col-lg-3 col-4">
-                                <label class="colored-checkbox-lbl"><%=condition%>
-                                    <input class="form-check-input colored-checkbox" type="checkbox" id="<%=condition%>" name="conditionFilter" value="<%=condition%>" <% if(filter.conditions.includes(condition)) { %> checked <% }%>  >
-                                    <span class="checkmark checkmark-blue"></span>
-                                </label>
-                            </div>
-                        <% } %> 
-                        </div>
-                                       
-                    </div>
-                    <div class="col-md-4 mb-5">
-                        <div class="row mb-3">
-                            <h3 class="mb-3">
-                                Forecast Day
-                            </h3>
-                            <div>
-                                <input type="date" class="form-control shadow-none" id="date-filter" name="date" placeholder="Seattle WA" aria-label="Weather forecast day" required>
-                            </div> 
-                        </div>
-                        <div class="row mb-3">
-                            <h3 class="mb-3">
-                                Location
-                            </h3>
-                            <div class="col-8">
-                                <input type="text" class="form-control shadow-none" id="location-filter" name="location" placeholder="Seattle WA" value="<%=filter.location%> " aria-label="Location">
-                            </div>
-                
-                            <div class="col-4">
-                                  <select class="form-select shadow-none" id="distance-filter" name="distance" aria-label="Distance from location">
-                                    <option value="10">10 miles</option>
-                                    <option value="50">50 miles</option>
-                                    <option value="100">100 miles</option>
-                                    <option value="250">250 miles</option>
-                                  </select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <button type="submit" class="btn btn-primary shadow-none btn-primary-custom">Find Hikes</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                <% for(let i = 0; i < 6; i++) { %> 
+                <div class="col-xxl-2 col-lg-3 col-6 py-1">
+                    <label class="colored-checkbox-lbl"><%=conditions[i]%>
+                        <input class="form-check-input colored-checkbox" type="checkbox" id="<%=conditions[i]%>" name="conditionFilter" value="<%=conditions[i]%>" <% if(filter.conditions.includes(conditions[i])) { %> checked <% }%>  >
+                        <span class="checkmark checkmark-blue"></span>
+                    </label>
+                </div>
+            <% } %> 
             </div>
-        
+            <div class="row">
+
+                <div class="accordion " id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button py-2 shadow-none text-dark bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                          Other...
+                        </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div class="row">
+                                <% for(let i = 6; i < conditions.length; i++) { %> 
+                                    <div class="col-xxl-2 col-lg-3 col-6">
+                                        <label class="colored-checkbox-lbl" style="hyphens: none">
+                                            <%if(conditions[i]==='Thunderstorm') {%>
+                                            T&#8209;storm
+                                            <% } else { %> <%=conditions[i]%> <% } %>   
+                                            <input class="form-check-input colored-checkbox" type="checkbox" id="<%=conditions[i]%>" name="conditionFilter" value="<%=conditions[i]%>" <% if(filter.conditions.includes(conditions[i])) { %> checked <% }%>  >
+                                            <span class="checkmark checkmark-blue"></span>
+                                        </label>
+                                    </div>
+                                <% } %> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+                           
         </div>
-      </div>
-    </div>
- </div>
+        <div class="col-xl-3 col-md-4 mb-3">
+            <div class="row">
+                <div class="col-xxl-8 col-lg-6 py-1">
+                    <input type="text" class="form-control shadow-none" id="location-filter" name="location" placeholder="Seattle WA" value="<%=filter.location%> " aria-label="Location">
+                </div>
+    
+                <div class="col-xxl-4 col-lg-6 py-1">
+                      <select class="form-select shadow-none" id="distance-filter" name="distance" aria-label="Distance from location">
+                        <option value="10">10 miles</option>
+                        <option value="50">50 miles</option>
+                        <option value="100">100 miles</option>
+                        <option value="250">250 miles</option>
+                      </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-8 col-lg-6 py-1">
+                    <input type="date" class="form-control shadow-none" id="date-filter" name="date" placeholder="Seattle WA" aria-label="Weather forecast day" required>
+                </div>
+                <div class="col-xxl-4 col-lg-6 py-1">
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary shadow-none btn-primary-custom">Find</button>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </form>
+</div>
+
 
  <div id="cluster-map"></div>
 
@@ -73,15 +80,15 @@
     <div class="col-lg-12">
         <div>
 
-        <h1 class="text-center">
+        <h1 class="mt-5 mx-3">
             <% if(hikes.length === 0) {%>
-                No hikes found.
+                No hikes found
             <% } else {%>
-                Hikes within <%=filter.distance%> miles from <%=filter.location%>  
+                <%=hikes.length%> hikes and parks
             <% }%>
         </h1>
 
-        <div id="row-hike" class="row mt-5 px-0">
+        <div id="row-hike" class="row mt-3 px-0">
         </div>
         
         <nav id="pageNav" class="mt-5">

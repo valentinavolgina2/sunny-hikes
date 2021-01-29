@@ -1,25 +1,25 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-dark navbar-footer-custom">
+<nav class="navbar sticky-top navbar-expand-lg navbar-footer-custom">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Seattle &#9788; Seekers</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand nav-link-custom" href="/">Seattle &#9788; Seekers</a>
+        <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link" href="/">Home</a>
-                <a class="nav-link" href="/hikes">Hikes</a>
-                <a class="nav-link" href="/hikes/new">New Hike</a>
+                <a class="nav-link nav-link-custom" href="/">Home</a>
+                <a class="nav-link nav-link-custom" href="/hikes">Hikes</a>
+                <a class="nav-link nav-link-custom" href="/hikes/new">New Hike</a>
                 <% if(currentUser && currentUser.admin) { %> 
-                <a class="nav-link" href="/hikes/weather">Get Forecast</a>
+                <a class="nav-link nav-link-custom" href="/hikes/weather">Get Forecast</a>
                 <% } %> 
             </div>
             <div class="navbar-nav ms-auto">
 
                 <% if(!currentUser) { %> 
-                    <a class="nav-link" href="/login">Login</a>
-                    <a class="nav-link" href="/register">Register</a>
+                    <a class="nav-link nav-link-custom" href="/login">Login</a>
+                    <a class="nav-link nav-link-custom" href="/register">Register</a>
                 <% } else {%> 
-                    <a class="nav-link" href="/logout">Logout</a>
+                    <a class="nav-link nav-link-custom" href="/logout">Logout</a>
                 <% } %> 
             </div>
         </div>

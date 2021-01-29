@@ -4,14 +4,20 @@
 <div class="row mt-5">
     <div class="col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
         <div class="row mb-5">
-            <div class="col-6">
+            <div class="col-8">
                 <h1 class="mb-3"><%= hike.title%></h1>
             </div>
-            <div class="col-6 text-end">
-                <% if(currentUser && hike.owner.equals(currentUser._id)) { %> 
+            <div class="col-4 text-end">
+                <% if(currentUser && hike.owner.equals(currentUser._id)) { %>
                     <form class="d-inline" action="/hikes/<%= hike._id%>?_method=DELETE" method="POST">
-                        <a href="/hikes/<%= hike._id%>/edit" class="card-link btn btn-secondary btn-primary-custom">Edit</a>
-                        <button id="delete-hike-btn" class="btn btn-outline-danger shadow-none" >Delete</button>
+                        <div class="row">
+                        <div class="col-md-6 d-grid px-1 py-1">
+                                <a href="/hikes/<%= hike._id%>/edit" class="card-link btn btn-secondary btn-primary-custom">Edit</a>
+                        </div>
+                        <div class="col-md-6 d-grid px-1 py-1">
+                                <button id="delete-hike-btn" class="btn btn-danger btn-danger-custom shadow-none" >Delete</button>
+                        </div>
+                        </div> 
                     </form>
                 <% } %> 
             </div>
@@ -102,7 +108,7 @@
                                  
                         </div>
                         <div class="row text-center">
-                            <div class="col-6 offset-3">
+                            <div class="col-12">
                                 <img src="/images/weather/<%=weather.icon%>.png" alt>
                             </div>
                         </div>
@@ -138,7 +144,7 @@
                         <p class="card-text multiline-text"><%=review.body %></p>
                         <%  if( currentUser && review.owner.equals(currentUser._id))  {%>
                         <form action="/hikes/<%=hike._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
-                            <button class="btn btn-sm btn-outline-dark shadow-none delete-review-btn" onclick="deleteReview">Delete</button>
+                            <button class="btn btn-sm btn-danger btn-danger-custom shadow-none delete-review-btn" onclick="deleteReview">Delete</button>
                         </form>
                         <% } %> 
                     </div>
