@@ -8,9 +8,8 @@
     const maxImages = 2;
     let extensionIsAllowed = true;
 
-    const currentImages = Array.from(document.querySelectorAll('.delete-image'));
-    let remainImages = (currentImages) ? currentImages.length : 0;
-
+    const closeSpans = Array.from(document.querySelectorAll('.close'));
+    let remainImages = (closeSpans) ? closeSpans.length : 0;
 
     imageUpload.addEventListener('change', function (event) {
 
@@ -43,17 +42,18 @@
 
     }, false)
 
-    if (currentImages) { 
-        currentImages.forEach(function (currentImage) { 
-            currentImage.addEventListener('change', function (e) { 
+    if (closeSpans) { 
+        closeSpans.forEach(function (closeSpan) { 
+            closeSpan.addEventListener('click', function (e) { 
     
+                const currentImage = closeSpan.parentElement.children[2];
+                currentImage.checked = !currentImage.checked;
+
                 if (currentImage.checked) {
-                    currentImage.labels[0].innerHTML = "Undo";
-                    currentImage.parentElement.parentElement.classList.add('img-deleted');
+                    currentImage.parentElement.classList.add('img-deleted');
                     remainImages--;
                 } else { 
-                    currentImage.labels[0].innerHTML = "Delete";
-                    currentImage.parentElement.parentElement.classList.remove('img-deleted');
+                    currentImage.parentElement.classList.remove('img-deleted');
                     remainImages++;
                 }
     

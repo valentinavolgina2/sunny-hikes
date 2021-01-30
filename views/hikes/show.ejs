@@ -92,7 +92,7 @@
 
         <section class="mb-5">
             <h2 class="mb-3">Weather</h2>
-            <% if(hike.weather) { %>
+            <% if(hike.weather.length > 0) { %>
                 <% let tomorrow =  new Date()%>
                 <% tomorrow.setDate(tomorrow.getDate() + 1) %> 
                 <div class="row">
@@ -121,7 +121,9 @@
                     </div>
                     <%  } %> 
                 </div>
-            <%  } %> 
+            <% } else {%> 
+                    <p>There is no weather forecast yet.</p>
+            <% }%>  
 
         </section>
 
@@ -149,18 +151,21 @@
                         <% } %> 
                     </div>
                 </div>
+            <% } %>
+            <% if(hike.reviews.length === 0) { %> 
+                <p>There are no reviews yet.</p>
+            <% } else {%>  
+                <nav id="pageNav" class="mt-5">
+                    <ul id="pageButtons" class="pagination justify-content-center">
+                    <li id="previousBtn" class="page-item">
+                        <a class="page-link page-link-custom" href="/hikes/<%=hike._id%>?page=<%= previousPage%>" tabindex="-1">Previous</a>
+                    </li>
+                    <li id="nextBtn" class="page-item">
+                        <a class="page-link page-link-custom" href="/hikes/<%=hike._id%>?page=<%=nextPage%>">Next</a>
+                    </li>
+                    </ul>
+                </nav>
             <% } %> 
-    
-            <nav id="pageNav" class="mt-5">
-                <ul id="pageButtons" class="pagination justify-content-center">
-                <li id="previousBtn" class="page-item">
-                    <a class="page-link page-link-custom" href="/hikes/<%=hike._id%>?page=<%= previousPage%>" tabindex="-1">Previous</a>
-                </li>
-                <li id="nextBtn" class="page-item">
-                    <a class="page-link page-link-custom" href="/hikes/<%=hike._id%>?page=<%=nextPage%>">Next</a>
-                </li>
-                </ul>
-            </nav>
 
         </section>
 

@@ -29,7 +29,7 @@ const Joi = BaseJoi.extend(extension)
 module.exports.hikeValidSchema = Joi.object({
     hike: Joi.object({
         title: Joi.string().max(100, 'utf8').required().escapeHTML(),
-        description: Joi.string().max(1000, 'utf8').required().escapeHTML(),
+        description: Joi.string().optional().allow('').max(1000, 'utf8').escapeHTML(),
         location: Joi.string().max(100, 'utf8').required().escapeHTML(),
         pass: Joi.string().required().escapeHTML().valid(...Object.values(passes)),
         facilities: Joi.object({

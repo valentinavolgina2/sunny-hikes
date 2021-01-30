@@ -85,10 +85,7 @@
             <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
                 
-                <textarea class="form-control shadow-none textarea-fit" type="text" id="description" name="hike[description]" maxlength="1000" required><%= hike.description%></textarea>
-                <div class="valid-feedback">
-                    Looks good!
-                  </div>
+                <textarea class="form-control shadow-none textarea-fit" type="text" id="description" name="hike[description]" maxlength="1000"><%= hike.description%></textarea>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="location">Location</label>
@@ -109,15 +106,14 @@
             </div>
             <div class="mb-3">
                 <% hike.images.forEach(function(image,i) { %> 
-                     <div class="img-wrap d-inline-block">
-                        <img src="<%=image.thumbnail%>" class="img-thumbnail" alt="">
-                        <div class="form-check-inline">
+                     <div class="img-wrap">
+                        <span class="close">&times;</span>
+                        <img src="<%=image.thumbnail%>" class="" alt="">
                             <input class="btn-check delete-image shadow-none" type="checkbox" id="img_<%=i%>" name="deleteImages[]" value="<%=image.filename%>" autocomplete="off">
-                        </div>
-                        <label class="btn btn-danger close" for="img_<%=i%>">Delete</label>
                     </div>
                     <% }) %> 
             </div>
+
             <div class="row mb-3">
                 <div class="col-md-6 mb-3">
                     <div class="d-grid">

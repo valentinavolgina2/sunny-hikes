@@ -1,11 +1,37 @@
 .img-wrap {
   position: relative;
+  display: inline-block;
+  font-size: 0;
 }
 .img-wrap .close {
   position: absolute;
-  top: 35%;
-  right: 40%;
+  top: 2px;
+  right: 2px;
   z-index: 100;
+  background-color: #fff;
+  padding: 0px 2px 4px 2px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0.2;
+  text-align: center;
+  vertical-align: center;
+  font-size: 30px;
+  line-height: 20px;
+  border-radius: 50%;
+}
+
+.img-wrap .delete-image {
+  position: absolute;
+  height: 100px;
+  top: 2px;
+  left: 2px;
+  z-index: 200;
+  background-color: #fff;
+}
+
+.img-wrap:hover .close {
+  opacity: 1;
 }
 
 .img-deleted {
