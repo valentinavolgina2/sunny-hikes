@@ -98,7 +98,7 @@
                 <label class="form-label" for="image">Add Photos</label>
                 <input class="form-control shadow-none" type="file" name="image" id="images" accept=".jpeg, .jpg, .png" multiple>
                 <div class="invalid-feedback">
-                    You can upload no more than 2 images (.jpg, .jpeg, .png only).
+                    You can upload up to 5 images, each file must be at most 3MB (.jpg, .jpeg, .png only).
                 </div>
                 <div class="valid-feedback">
                     Looks good!
@@ -130,6 +130,10 @@
 
     </div>
 </div>
+
+<script>
+    const hike = <%- JSON.stringify(hike) %>
+</script>
 
 <script src="/script/textareaFitContent.js"></script>
 <script src="/script/hikeValidation.js"></script>

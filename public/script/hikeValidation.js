@@ -5,8 +5,10 @@
 
     const form = document.getElementById('hikeForm');
     const imageUpload = document.querySelector('#images');
-    const maxImages = 2;
-    let extensionIsAllowed = true;
+    const maxImages = 5;
+    let isValidFileExtension = true;
+    const MAX_FILE_SIZE = 3 * 1024 * 1024// 3MB;
+    let isValidFileSize = true;
 
     const closeSpans = Array.from(document.querySelectorAll('.close'));
     let remainImages = (closeSpans) ? closeSpans.length : 0;
@@ -17,12 +19,21 @@
         imageUpload.classList.remove('is-invalid');
         imageUpload.classList.remove('is-valid');
 
-        extensionIsAllowed = checkFileExtensions(imageUpload);
+        isValidFileExtension = checkFileExtensions(imageUpload);
 
-        if (!extensionIsAllowed || imageUpload.files.length + remainImages > maxImages) {
-            imageUpload.classList.add('is-invalid');
-        } else { 
+        let files = Array.from(imageUpload.files).map(x => x.size);
+        const largeFiles = files.filter(f=>f>MAX_FILE_SIZE);
+        
+        isValidFileSize = (largeFiles.length == 0);
+        const isValidFilesNUmber = imageUpload.files.length + remainImages <= maxImages;
+        console.log(`isValidFileExtension: ${isValidFileExtension}`);
+        console.log(`isValidFileSize: ${isValidFileSize}`);
+        console.log(`isValidFilesNUmber: ${isValidFilesNUmber}`);
+        console.log(largeFiles);
+        if (isValidFileExtension && isValidFileSize && isValidFilesNUmber) {
             imageUpload.classList.add('is-valid');
+        } else { 
+            imageUpload.classList.add('is-invalid');
         }
     }, false)
 
@@ -30,14 +41,18 @@
 
         imageUpload.classList.remove('is-invalid');
         imageUpload.classList.remove('is-valid');
-        if (!extensionIsAllowed || imageUpload.files.length + remainImages > maxImages) {
+        const isValidFilesNUmber = imageUpload.files.length + remainImages <= maxImages;
+        if (isValidFileExtension && isValidFileSize && isValidFilesNUmber) {
+            if (!form.checkValidity()) { 
+                event.preventDefault();
+                event.stopPropagation();
+                form.classList.add('was-validated');
+            }
+            console.log("was validated");
+        } else { 
             event.preventDefault()
             event.stopPropagation()
             imageUpload.classList.add('is-invalid');
-        } else if (!form.checkValidity()){ 
-            event.preventDefault();
-            event.stopPropagation();
-            form.classList.add('was-validated');
         }
 
     }, false)
@@ -60,10 +75,11 @@
                 form.classList.remove('was-validated');
                 imageUpload.classList.remove('is-invalid');
                 imageUpload.classList.remove('is-valid');
-                if (!extensionIsAllowed || imageUpload.files.length + remainImages > maxImages) {
-                    imageUpload.classList.add('is-invalid');
-                } else { 
+                const isValidFilesNUmber = imageUpload.files.length + remainImages <= maxImages;
+                if (isValidFileExtension && isValidFileSize && isValidFilesNUmber) {
                     imageUpload.classList.add('is-valid');
+                } else { 
+                    imageUpload.classList.add('is-invalid');
                 }
             })
         })
@@ -86,3 +102,4 @@ function checkFileExtensions(imageUpload) {
     }
     return true;
 }
+

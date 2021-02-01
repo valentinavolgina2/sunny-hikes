@@ -21,6 +21,8 @@ const createPageButton = function (page, active) {
 
 function changePages() {
 
+    if (hike.reviews.length === 0) return;
+
     if (previousPage === 0) {
         previous.classList.add('disabled');
     } else {
