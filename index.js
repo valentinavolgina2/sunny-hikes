@@ -2,6 +2,8 @@ if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
 
+
+
 const express = require('express'); //set up express
 const path = require('path'); //set up ejs
 const mongoose = require('mongoose'); //set up mongoose
@@ -16,14 +18,15 @@ const User = require('./models/user');
 const helmet = require('helmet');
 
 const mongoSanitize = require('express-mongo-sanitize');
-
+const MongoStore = require('connect-mongo')(session);
 
 const hikeRoutes = require('./routes/hikes');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-hike';
 //set up mongoose
-mongoose.connect('mongodb://localhost:27017/yelp-hike', {
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -46,10 +49,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method')); // overriding method when submitting a form
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
+const secret = process.env.SECRET || 'somesecret';
+
+const store = new MongoStore({
+    url: dbUrl,
+    secret,
+    touchAfter: 24 * 3600 //in seconds
+});
+
+store.on("error", function (error) {
+    console.log("Session store error", error);
+})
 
 const sessionConfig = {
+    store,
     name: 'mysession',
-    secret: 'somesecret',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
