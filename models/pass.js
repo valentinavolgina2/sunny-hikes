@@ -1,7 +1,8 @@
 const passes = {
 	NONE: "None",
-	ATB: "America the Beautiful",
-	NFP: "Northwest Forest Pass",
+	AMERICA: "America the Beautiful",
+    FOREST: "Northwest Forest Pass",
+    REFUGE: "Refuge Entrance Pass",
     DISCOVER: "Discover Pass",
     SNOPARK: "Sno-Park Pass"
 }
