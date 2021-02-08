@@ -5,6 +5,7 @@ const opts = { toJSON: { virtuals: true } };
 const passes = require('./pass');
 const conditions = require('./weather');
 const restrooms = require('./restroom');
+const activities = require('./activity');
 
 const ImageSchema = new Schema({
     url: String,
@@ -44,15 +45,13 @@ const HikeSchema = new Schema({
     ],
     pass: [...Object.values(passes)],
     facilities: {
-        trail: Boolean,
-        park: Boolean,
         dogsAllowed: Boolean,
         beachAccess: Boolean,
         restrooms: [...Object.values(restrooms)],
         picnicArea: Boolean,
-        barbeque: Boolean,
-        childrenPlayground: Boolean,
+        barbeque: Boolean
     },
+    activities: [...Object.values(activities)],
     weather: [
         {
             day: Date,
@@ -78,14 +77,10 @@ const HikeSchema = new Schema({
 }, opts);
 
 const getFacilities = (hike) => { 
-    return ((hike.facilities.trail) ? "Trail, " : "") +
-        ((hike.facilities.park) ? "Park, " : "") +
-        ((hike.facilities.beachAccess) ? "Beach, " : "") +
+    return ((hike.facilities.beachAccess) ? "Beach, " : "") +
         ((hike.facilities.picnicArea) ? "Picnic area, " : "") +
         ((hike.facilities.barbeque) ? "Barbeque, " : "") +
-        ((hike.facilities.dogsAllowed) ? "Dogs allowed, " : "No pets, ") +
-        ((hike.facilities.childrenPlayground) ? "Children playground, " : "") +
-        (hike.facilities.restrooms);
+        ((hike.facilities.dogsAllowed) ? "Dogs allowed " : "No pets ") ;
 }
 
 HikeSchema.virtual('properties.facility').get(function () {

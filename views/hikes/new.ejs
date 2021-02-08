@@ -1,6 +1,18 @@
 <% layout('layouts/boilerplate')%> 
+
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<link
+rel="stylesheet"
+href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+type="text/css"
+/>
+<!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+
+
 <div class="row mt-5">
-    <h1 class="text-center">New Hike</h1>
+    <h1 class="text-center">New Recreation</h1>
     <div class="col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
 
         <form action="/hikes" method="POST" novalidate id="hikeForm" enctype="multipart/form-data">
@@ -12,11 +24,14 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="location">Location</label>
-                <input class="form-control shadow-none" type="text" id="location" name="hike[location]" maxlength="100" required>
+                <label class="form-label" for="location">Location (to change the location, please use the map search box below)</label>
+                <input class="form-control shadow-none" type="text" id="location" name="hike[location]" maxlength="100" placeholder="Please use the map search box below" readonly required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
+            </div>
+            <div class="mb-3">
+                <div id="location-map"></div> 
             </div>
             <div class="mb-3">
                 <label class="form-label" for="pass">Pass</label>
@@ -27,18 +42,8 @@
                 </select>
             </div>
             <div class="row">
-                <label class="form-label mb-3">Facilities</label>
-                    <div class="col-4">
-                        <div class="mb-3">
-                            <input class="form-check-input shadow-none facility" type="checkbox" id="trail" checked>
-                            <label class="form-check-label" for="trail">Trail</label>
-                        </div>
-                        <div class="mb-3">
-                            <input class="form-check-input shadow-none facility" type="checkbox" id="park">
-                            <label class="form-check-label" for="park">Park</label>
-                        </div>
-                </div>
-                <div class="col-4">
+                <h2 class="label-custom">Facilities</h2>
+                <div class="col-6">
                         <div class="mb-3">
                             <input class="form-check-input shadow-none facility" type="checkbox" id="beachAccess">
                             <label class="form-check-label" for="beachAccess">Beach access</label>
@@ -52,11 +57,7 @@
                             <label class="form-check-label" for="barbeque">Barbeque</label>
                         </div>
                 </div>
-                <div class="col-4">
-                        <div class="mb-3">
-                            <input class="form-check-input shadow-none facility" type="checkbox" id="childrenPlayground">
-                            <label class="form-check-label" for="childrenPlayground">Children Playground</label>
-                        </div>
+                <div class="col-6">
                         <div class="mb-3">
                             <input class="form-check-input shadow-none facility" type="checkbox" id="dogsAllowed" checked>
                             <label class="form-check-label" for="dogsAllowed">Dogs are allowed</label>
@@ -75,6 +76,15 @@
                 </div>
             </div>
 
+            <div class="row mb-3">
+                <h2 class="label-custom">Activities</h2>
+                <% for(let activity of activities) { %> 
+                <div class="col-xxl-3 col-lg-4 col-6 py-1">
+                    <input class="form-check-input shadow-none" type="checkbox" id="<%=activity.replace(/\s/g,'')%>" name="hike[activities]" value="<%=activity%>">
+                    <label class="form-check-label" for="<%=activity.replace(/\s/g,'')%>"><%=activity%></label>
+                </div>
+                <% } %> 
+            </div>
 
             <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
@@ -92,7 +102,7 @@
             </div>
 
             <div class="mb-3 d-grid gap-2">
-                <button class="btn btn-success btn-primary-custom">Add Hike</button>
+                <button class="btn btn-success btn-primary-custom">Add Recreation</button>
                 <a class="btn btn-secondary" href="/hikes">Cancel</a>
             </div>
             
@@ -101,9 +111,13 @@
     </div>
 </div>
 
+<script>
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+</script>
 <script src="/script/textareaFitContent.js"></script>
 <script src="/script/hikeValidation.js"></script>
 <script src="/script/new.js"></script>
 <script src="/script/facility.js"></script>
+<script src="/script/mapEditLocation.js"></script>
 
 

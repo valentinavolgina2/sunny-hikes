@@ -23,7 +23,7 @@ module.exports.isAdmin = async (req, res, next) => {
 module.exports.isOwner = async (req, res, next) => { 
     const { id } = req.params;
     let hike = await Hike.findById(id);
-    if (!hike.owner.equals(req.user._id)) { 
+    if (!req.user.admin && !hike.owner.equals(req.user._id)) { 
         req.flash('error', 'You do not have permission to do that!');
         return res.redirect(`/hikes/${id}`);
     }
@@ -31,6 +31,10 @@ module.exports.isOwner = async (req, res, next) => {
 }
 
 module.exports.validateHike = (req, res, next) => { 
+    let activities = (req.body.hike.activities) ? req.body.hike.activities : [];
+    if (!Array.isArray(activities)) activities = [activities];
+    req.body.hike.activities = activities;
+
     const { error } = hikeValidSchema.validate(req.body);
     if (error) {
         const message = error.details.map(el => el.message).join(',');
@@ -53,7 +57,7 @@ module.exports.validateReview = (req, res, next) => {
 module.exports.isReviewOwner = async (req, res, next) => { 
     const { id, reviewId } = req.params;
     let review = await Review.findById(reviewId);
-    if (!review.owner.equals(req.user._id)) { 
+    if (!req.user.admin && !review.owner.equals(req.user._id)) { 
         req.flash('error', 'You do not have permission to do that!');
         return res.redirect(`/hikes/${id}`);
     }

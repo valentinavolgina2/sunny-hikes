@@ -7,19 +7,39 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <a class="nav-link nav-link-custom" href="/">Home</a>
-                <a class="nav-link nav-link-custom" href="/hikes">Hikes</a>
-                <a class="nav-link nav-link-custom" href="/hikes/new">New Hike</a>
+                <div class="nav-item dropdown">
+                    <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="hikeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Recreations 
+                    </a>
+                    <ul class="dropdown-menu navbar-footer-custom dropdown-menu-end" aria-labelledby="hikeDropdown">
+                      <li><a class="dropdown-item nav-link-custom" href="/hikes">Show All</a></li>
+                      <% if(currentUser) { %>
+                        <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item nav-link-custom" href="/hikes?mine=true">Only Mine</a></li>
+                      <% } %>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item nav-link-custom" href="/hikes/new">Create New</a></li>
+                    </ul>
+                </div> 
                 <% if(currentUser && currentUser.admin) { %> 
                 <a class="nav-link nav-link-custom" href="/hikes/weather">Get Forecast</a>
                 <% } %> 
             </div>
             <div class="navbar-nav ms-auto">
 
-                <% if(!currentUser) { %> 
+                <% if(!currentUser) { %>
                     <a class="nav-link nav-link-custom" href="/login">Login</a>
                     <a class="nav-link nav-link-custom" href="/register">Register</a>
                 <% } else {%> 
-                    <a class="nav-link nav-link-custom" href="/logout">Logout</a>
+                    <div class="nav-item dropdown">
+                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <%=currentUser.username%> 
+                        </a>
+                        <ul class="dropdown-menu navbar-footer-custom dropdown-menu-end" aria-labelledby="navbarDropdown">
+                          <li><a class="dropdown-item nav-link-custom" href="/profile">Edit Profile</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item nav-link-custom" href="/logout">Logout</a></li>
+                        </ul>
+                    </div> 
                 <% } %> 
             </div>
         </div>

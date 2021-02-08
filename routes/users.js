@@ -10,7 +10,14 @@ router.route('/register')
 
 router.route('/login')
     .get(users.getLoginForm)
-    .post(passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}),  users.login)
+    .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login)
+    
+router.route('/profile')
+    .get(users.getProfileForm)
+    .post(catchAsync(users.updateUser))
+
+router.route('/password')
+    .post(catchAsync(users.updatePassword))
 
 router.get('/logout', users.logout)
 

@@ -8,7 +8,7 @@
                 <h1 class="mb-3"><%= hike.title%></h1>
             </div>
             <div class="col-4 text-end">
-                <% if(currentUser && hike.owner.equals(currentUser._id)) { %>
+                <% if(currentUser && (currentUser.admin || hike.owner.equals(currentUser._id))) { %>
                     <form class="d-inline" action="/hikes/<%= hike._id%>?_method=DELETE" method="POST">
                         <div class="row">
                         <div class="col-md-6 d-grid px-1 py-1">
@@ -62,23 +62,24 @@
 
         <section class="mb-5">
             <h2 class="mb-3">Information</h2>
-
             <div class="row my-3">
-                <div class="col-4">
-                    <% if(hike.facilities.trail) { %> <p>Trail</p> <% } %> 
-                    <% if(hike.facilities.park) { %> <p>Park</p> <% } %>
-                    <p>Restrooms: <%=hike.facilities.restrooms%> </p>
-                </div>
-                <div class="col-4">
-                    <% if(hike.facilities.beachAccess) { %> <p>Beach access</p> <% } %> 
-                    <% if(hike.facilities.picnicArea) { %> <p>Picnic Area</p> <% } %>
-                    <% if(hike.facilities.barbeque) { %> <p>Barbeque</p> <% } %> 
-                </div>
-                <div class="col-4">
-                    <% if(hike.facilities.childrenPlayground) { %> <p>Children Playground</p> <% } %> 
-                    <% if(hike.facilities.dogsAllowed) { %> <p>Dogs are allowed</p> <% } else { %> 
-                        <p>Dogs are not allowed</p> <% } %> 
-                </div>
+                <h3 class="mb-3">Facilities</h3>
+                <p>
+                    <% if(hike.facilities.beachAccess) { %> <span>Beach access, </span> <% } %> 
+                    <% if(hike.facilities.picnicArea) { %> <span>Picnic Area, </span> <% } %>
+                    <% if(hike.facilities.barbeque) { %> <span>Barbeque, </span> <% } %>
+                    <% if(hike.facilities.dogsAllowed) { %> <span>Dogs are allowed, </span> <% } else { %> 
+                    <span>Dogs are not allowed, </span> <% } %>
+                    <span>Restrooms: <%=hike.facilities.restrooms%> </span>
+                </p>
+            </div>
+            <div class="row my-3">
+                <h3 class="mb-3">Activities</h3>
+                <p>
+                <% for(let activity of hike.activities) { %> 
+                    <span><%=activity%>, </span>
+                <% } %>
+                </p>
             </div>
 
             <p class="multiline-text"><%= hike.description%></p>
@@ -144,7 +145,7 @@
                         </div>
                         <h5 class="card-title"><%=review.owner.username %></h5>
                         <p class="card-text multiline-text"><%=review.body %></p>
-                        <%  if( currentUser && review.owner.equals(currentUser._id))  {%>
+                        <%  if( currentUser && (currentUser.admin || review.owner.equals(currentUser._id)))  {%>
                         <form action="/hikes/<%=hike._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
                             <button class="btn btn-sm btn-danger btn-danger-custom shadow-none delete-review-btn" onclick="deleteReview">Delete</button>
                         </form>

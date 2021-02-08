@@ -8,6 +8,7 @@ const conditions = require('../models/weather');
 const restrooms = require('../models/restroom');
 const weatherKey = process.env.WEATHER_KEY;
 const got = require('got');
+const activities = require('../models/activity');
 
 const units = 'imperial'; 
 let lastWeatherRequestTime = new Date();
@@ -23,7 +24,7 @@ function getValues(enumObject){
 module.exports.list = async (req, res) => {
     const location = (req.query.location) ? req.query.location : "Seattle WA";
     const distance = (req.query.distance) ? req.query.distance : 250;
-
+    const myHikes = (req.query.mine) ? true : false;
     //https://www.sunzala.com/why-the-javascript-date-is-one-day-off/
     const day = (req.query.date) ? new Date(req.query.date.replace('-', '/')) : new Date();
     const allConditions = getValues(conditions);
@@ -44,7 +45,7 @@ module.exports.list = async (req, res) => {
                         }
                     }
                 }
-            }]
+            }],
             
         };
     } else { 
@@ -58,10 +59,15 @@ module.exports.list = async (req, res) => {
                         }
                     }
                 }
-            }]
+            }],
             
         }
     }
+
+    if (myHikes) { 
+        query.owner = req.user._id;
+    }
+
     let hikes = await Hike.aggregate([
         {
             $geoNear: {
@@ -82,12 +88,12 @@ module.exports.list = async (req, res) => {
         return new Hike(d);
     });
 
-    res.render('hikes/index', { hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day, conditions: conditionFilter}, conditions: allConditions});
+    res.render('hikes/index', { hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day, conditions: conditionFilter, mine: myHikes}, conditions: allConditions});
 
 }
 
 module.exports.getNewForm = (req, res) => {
-    res.render('hikes/new', {passes: [...Object.values(passes)], restrooms: [...Object.values(restrooms)]});
+    res.render('hikes/new', {passes: [...Object.values(passes)], restrooms: [...Object.values(restrooms)], activities: [...Object.values(activities)]});
 }
 
 module.exports.showHike = async (req, res) => {
@@ -124,6 +130,7 @@ module.exports.createHike = async (req, res) => {
         limit: 1
     }).send();
 
+    
     const hike = new Hike(req.body.hike);
     hike.geometry = geoData.body.features[0].geometry;
     hike.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
@@ -142,14 +149,19 @@ module.exports.getEditForm = async (req, res) => {
         req.flash('error', 'Cannot find that page!');
         return res.redirect('/hikes');
     }
-    res.render('hikes/edit', { hike: hike, passes: [...Object.values(passes)], restrooms: [...Object.values(restrooms)]});
+    res.render('hikes/edit', { hike: hike, passes: [...Object.values(passes)], restrooms: [...Object.values(restrooms)], activities: [...Object.values(activities)]});
 }
 
 module.exports.updateHike = async (req, res) => { 
     const { id } = req.params;
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.hike.location,
+        limit: 1
+    }).send();
     const hike = await Hike.findByIdAndUpdate(id, { ...req.body.hike });
     const addedImages = req.files.map(f => ({ url: f.path, filename: f.filename }));
     hike.images.push(...addedImages);
+    hike.geometry = geoData.body.features[0].geometry;
 
     await hike.save();
     if (req.body.deleteImages) { 

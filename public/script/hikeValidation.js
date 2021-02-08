@@ -26,10 +26,6 @@
         
         isValidFileSize = (largeFiles.length == 0);
         const isValidFilesNUmber = imageUpload.files.length + remainImages <= maxImages;
-        console.log(`isValidFileExtension: ${isValidFileExtension}`);
-        console.log(`isValidFileSize: ${isValidFileSize}`);
-        console.log(`isValidFilesNUmber: ${isValidFilesNUmber}`);
-        console.log(largeFiles);
         if (isValidFileExtension && isValidFileSize && isValidFilesNUmber) {
             imageUpload.classList.add('is-valid');
         } else { 
@@ -48,7 +44,6 @@
                 event.stopPropagation();
                 form.classList.add('was-validated');
             }
-            console.log("was validated");
         } else { 
             event.preventDefault()
             event.stopPropagation()

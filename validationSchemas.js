@@ -3,6 +3,7 @@ const sanitizeHtml = require('sanitize-html');
 const passes = require('./models/pass');
 const restrooms = require('./models/restroom');
 const conditions = require('./models/weather');
+const activities = require('./models/activity');
 
 const extension = (joi) => ({
     type: 'string',
@@ -33,15 +34,15 @@ module.exports.hikeValidSchema = Joi.object({
         location: Joi.string().max(100, 'utf8').required().escapeHTML(),
         pass: Joi.string().required().escapeHTML().valid(...Object.values(passes)),
         facilities: Joi.object({
-            trail: Joi.boolean(),
-            park:  Joi.boolean(),
             dogsAllowed:  Joi.boolean(),
             beachAccess:  Joi.boolean(),
             restrooms: Joi.string().required().escapeHTML().valid(...Object.values(restrooms)),
             picnicArea:  Joi.boolean(),
-            barbeque:  Joi.boolean(),
-            childrenPlayground:  Joi.boolean()
+            barbeque:  Joi.boolean()
         }),
+        activities: Joi.array().items(
+            Joi.string().escapeHTML().valid(...Object.values(activities))
+        ),
         weather: Joi.array().items({
             day: Joi.date(),
             description: Joi.string().max(30, 'utf8').escapeHTML(),
