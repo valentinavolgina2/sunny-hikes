@@ -3,7 +3,7 @@ const hikeMap = document.getElementById('location-map');
 mapboxgl.accessToken = mapToken;
 if (!mapboxgl.supported()) {
     const location = document.getElementById('location');
-    location.readOnly = false;
+    location.hidden = false;
     hikeMap.classList.add('text-center');
     hikeMap.innerHTML = "You don't see the map because your browser does not support Mapbox GL. Please use another browser.";
 } else {
@@ -39,11 +39,15 @@ if (!mapboxgl.supported()) {
         mapboxgl: mapboxgl
     });
     
-    map.addControl(geocoder);
-
-
+    document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+    //map.addControl(geocoder);
 
     const locationSearchInput = document.querySelector('.mapboxgl-ctrl-geocoder--input');
+    const location = document.getElementById('location');
+    locationSearchInput.required = true;
+    locationSearchInput.value = location.value;
+    locationSearchInput.classList.add('form-control');
+    locationSearchInput.classList.add('map-border-custom');
     const locationInput = document.getElementById('location');
     locationSearchInput.addEventListener('change', function (e) {
         locationInput.value = locationSearchInput.value;

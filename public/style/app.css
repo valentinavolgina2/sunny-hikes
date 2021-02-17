@@ -13,10 +13,6 @@
   width: 100%;
   height: 50vh;
 }
-#geocoder-container > div {
-  min-width: 50%;
-  margin-left: 25%;
-}
 
 .label-custom {
   font-family: var(--bs-font-sans-serif);

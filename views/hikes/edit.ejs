@@ -5,6 +5,7 @@ rel="stylesheet"
 href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
 type="text/css"
 />
+<link rel="stylesheet" href="/style/locationSearch.css">
 <!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
 <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
@@ -90,14 +91,13 @@ type="text/css"
                 <textarea class="form-control shadow-none textarea-fit" type="text" id="description" name="hike[description]" maxlength="1000"><%= hike.description%></textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="location">Location (to change the location, please use the map search box below)</label>
-                <input class="form-control shadow-none" type="text" id="location" name="hike[location]" value="<%= hike.location%>" maxlength="100" placeholder="To change the location, please use the map search box below" readonly required>
+                <label class="form-label" for="location">Location</label>
+                <div id="geocoder" class="geocoder"></div> 
+                <input class="form-control shadow-none" type="text" id="location" name="hike[location]" value="<%= hike.location%>" maxlength="100"  hidden required>
                 <div class="valid-feedback">
                     Looks good!
                   </div>
-            </div>
-            <div class="mb-3">
-                <div id="location-map"></div> 
+                <div id="location-map" class="mt-3"></div> 
             </div>
             <div class="mb-3">
                 <label class="form-label" for="image">Add Photos</label>

@@ -1,0 +1,11 @@
+.geocoder {
+  min-width: 100%;
+}
+.mapboxgl-ctrl-geocoder {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.map-border-custom {
+  border: 1px solid #ced4da;
+}

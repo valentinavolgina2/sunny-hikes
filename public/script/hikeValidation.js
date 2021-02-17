@@ -37,12 +37,14 @@
 
         imageUpload.classList.remove('is-invalid');
         imageUpload.classList.remove('is-valid');
+
         const isValidFilesNUmber = imageUpload.files.length + remainImages <= maxImages;
         if (isValidFileExtension && isValidFileSize && isValidFilesNUmber) {
             if (!form.checkValidity()) { 
                 event.preventDefault();
                 event.stopPropagation();
                 form.classList.add('was-validated');
+                console.log("not valid");
             }
         } else { 
             event.preventDefault()
@@ -97,4 +99,5 @@ function checkFileExtensions(imageUpload) {
     }
     return true;
 }
+
 
