@@ -4,3 +4,7 @@ seeds/
 
 ###################
 *.env
+
+tests/ui/config.json
+.vscode/
+__pycache__
