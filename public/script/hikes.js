@@ -172,11 +172,23 @@ const setWeatherConditionColors = () => {
     });
 }
 
+const changeDateUTC = () => { 
+    const forecastDay = document.getElementById('date-filter').value.split('-');
+    const dateUTC = document.getElementById('dateFilterUTC');
+
+    const d = new Date(forecastDay[0], forecastDay[1]-1, forecastDay[2]);
+    dateUTC.value = d.getTime();
+}
+
 const setWeatherFilter = () => { 
     const forecastDayFilter = document.getElementById('date-filter');
-    let date = new Date(forecastDay);
-    const todayFormatted = formatDate(date);
+    const todayFormatted = formatDate(parseInt(forecastDay));
     forecastDayFilter.value = todayFormatted;
+    changeDateUTC();
+
+    forecastDayFilter.addEventListener('change',function () { 
+        changeDateUTC();
+    });
 
     setWeatherConditionColors();
 }

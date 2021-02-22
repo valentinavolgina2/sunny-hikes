@@ -26,7 +26,8 @@ module.exports.list = async (req, res) => {
     const distance = (req.query.distance) ? req.query.distance : 250;
     const myHikes = (req.query.mine) ? true : false;
     //https://www.sunzala.com/why-the-javascript-date-is-one-day-off/
-    const day = (req.query.date) ? new Date(req.query.date.replace('-', '/')) : new Date();
+    
+    const day = (req.query.date) ? new Date(parseInt(req.query.date)) : new Date();
     const allConditions = getValues(conditions);
     let conditionFilter = (req.query.conditionFilter) ? req.query.conditionFilter : allConditions;
     if (!Array.isArray(conditionFilter)) conditionFilter = [conditionFilter];
@@ -88,7 +89,7 @@ module.exports.list = async (req, res) => {
         return new Hike(d);
     });
 
-    res.render('hikes/index', { hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day, conditions: conditionFilter, mine: myHikes}, conditions: allConditions});
+    res.render('hikes/index', { hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day.getTime(), conditions: conditionFilter, mine: myHikes}, conditions: allConditions});
 
 }
 
