@@ -100,11 +100,11 @@
                     <% for (let weather of hike.weather) { %> 
                     <div class="col-lg-3 col-md-4 col-6 border">
                         <div class="row text-center mt-2">
-                            <% if(weather.day.toDateString() == (new Date().toDateString())) { %> <p>Today</p>
-                            <% } else if(weather.day.toDateString() == (tomorrow.toDateString())) {  %>
+                            <% if(new Date(weather.day).toDateString() == (new Date().toDateString())) { %> <p>Today</p>
+                            <% } else if(new Date(weather.day).toDateString() == (tomorrow.toDateString())) {  %>
                             <p>Tomorrow</p>
                             <% } else { %> 
-                            <p><%= weather.day.toDateString().split(' ')[0]%></p>
+                            <p><%= new Date(weather.day).toDateString().split(' ')[0]%></p>
                             <% }   %>
                                  
                         </div>

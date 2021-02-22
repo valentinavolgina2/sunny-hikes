@@ -252,7 +252,11 @@ function toMeters(miles) {
 function getDateWithoutTime() {
     var date = new Date();
     date.setHours(0, 0, 0, 0);
-    return date;
+
+    const timeZoneOffset = date.getTimezoneOffset();
+    const utcDate = new Date(date.getTime() - timeZoneOffset*60*1000)
+
+    return utcDate;
 }
 
 function getMinuteDifference(day1, day2) { 
