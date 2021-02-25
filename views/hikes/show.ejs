@@ -12,10 +12,10 @@
                     <form class="d-inline" action="/hikes/<%= hike._id%>?_method=DELETE" method="POST">
                         <div class="row">
                         <div class="col-md-6 d-grid px-1 py-1">
-                                <a href="/hikes/<%= hike._id%>/edit" class="card-link btn btn-secondary btn-primary-custom">Edit</a>
+                                <a href="/hikes/<%= hike._id%>/edit" class="card-link btn btn-secondary btn-primary-custom" id="editLink">Edit</a>
                         </div>
                         <div class="col-md-6 d-grid px-1 py-1">
-                                <button id="delete-hike-btn" class="btn btn-danger btn-danger-custom shadow-none" >Delete</button>
+                                <button id="delete-hike-btn" class="btn btn-danger btn-danger-custom shadow-none" id="deleteBtn">Delete</button>
                         </div>
                         </div> 
                     </form>
@@ -199,7 +199,7 @@
                         </div>
                     </div>
                     <div class="d-grid">
-                        <button class="btn btn-success btn-primary-custom shadow-none">Submit</button>
+                        <button class="btn btn-success btn-primary-custom shadow-none" id="addReviewBtn">Submit</button>
                     </div>
                 </form>
             <% } else {%> 
