@@ -34,7 +34,7 @@ module.exports.hikeValidSchema = Joi.object({
         location: Joi.string().max(100, 'utf8').required().escapeHTML(),
         pass: Joi.string().required().escapeHTML().valid(...Object.values(passes)),
         facilities: Joi.object({
-            dogsAllowed:  Joi.boolean(),
+            noPets:  Joi.boolean(),
             beachAccess:  Joi.boolean(),
             restrooms: Joi.string().required().escapeHTML().valid(...Object.values(restrooms)),
             picnicArea:  Joi.boolean(),

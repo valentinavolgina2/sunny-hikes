@@ -45,7 +45,7 @@ const HikeSchema = new Schema({
     ],
     pass: [...Object.values(passes)],
     facilities: {
-        dogsAllowed: Boolean,
+        noPets: Boolean,
         beachAccess: Boolean,
         restrooms: [...Object.values(restrooms)],
         picnicArea: Boolean,
@@ -80,7 +80,7 @@ const getFacilities = (hike) => {
     return ((hike.facilities.beachAccess) ? "Beach, " : "") +
         ((hike.facilities.picnicArea) ? "Picnic area, " : "") +
         ((hike.facilities.barbeque) ? "Barbeque, " : "") +
-        ((hike.facilities.dogsAllowed) ? "Dogs allowed " : "No pets ") ;
+        ((hike.facilities.noPets) ? "No pets " : "Pets allowed ") ;
 }
 
 HikeSchema.virtual('properties.facility').get(function () {

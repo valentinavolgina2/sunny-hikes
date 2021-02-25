@@ -68,8 +68,8 @@
                     <% if(hike.facilities.beachAccess) { %> <span>Beach access, </span> <% } %> 
                     <% if(hike.facilities.picnicArea) { %> <span>Picnic Area, </span> <% } %>
                     <% if(hike.facilities.barbeque) { %> <span>Barbeque, </span> <% } %>
-                    <% if(hike.facilities.dogsAllowed) { %> <span>Dogs are allowed, </span> <% } else { %> 
-                    <span>Dogs are not allowed, </span> <% } %>
+                    <% if(hike.facilities.noPets) { %> <span>No pets, </span> <% } else { %> 
+                    <span>Pets are allowed, </span> <% } %>
                     <span>Restrooms: <%=hike.facilities.restrooms%> </span>
                 </p>
             </div>
