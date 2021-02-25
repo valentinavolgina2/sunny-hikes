@@ -9,7 +9,11 @@ const activities = require('./activity');
 
 const ImageSchema = new Schema({
     url: String,
-    filename: String
+    filename: String,
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 ImageSchema.virtual('thumbnail').get(function () {

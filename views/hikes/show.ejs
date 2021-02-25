@@ -8,18 +8,22 @@
                 <h1 class="mb-3"><%= hike.title%></h1>
             </div>
             <div class="col-4 text-end">
-                <% if(currentUser && (currentUser.admin || hike.owner.equals(currentUser._id))) { %>
-                    <form class="d-inline" action="/hikes/<%= hike._id%>?_method=DELETE" method="POST">
-                        <div class="row">
-                        <div class="col-md-6 d-grid px-1 py-1">
-                                <a href="/hikes/<%= hike._id%>/edit" class="card-link btn btn-secondary btn-primary-custom" id="editLink">Edit</a>
-                        </div>
-                        <div class="col-md-6 d-grid px-1 py-1">
-                                <button id="delete-hike-btn" class="btn btn-danger btn-danger-custom shadow-none" id="deleteBtn">Delete</button>
-                        </div>
-                        </div> 
-                    </form>
-                <% } %> 
+                <% if(currentUser) { %>
+                <form class="d-inline" action="/hikes/<%= hike._id%>?_method=DELETE" method="POST">
+                    <div class="row">
+                    <div class="col-md-6 d-grid px-1 py-1">
+                            <a href="/hikes/<%= hike._id%>/edit" class="card-link btn btn-secondary btn-primary-custom" id="editLink">Edit</a>
+                    </div>
+                    
+                    <div class="col-md-6 d-grid px-1 py-1">
+                            <button id="delete-hike-btn" class="btn btn-danger btn-danger-custom shadow-none" id="deleteBtn" 
+                            <% if(!currentUser.admin && !hike.owner.equals(currentUser._id)) { %>
+                            disabled <% } %>  >Delete</button>
+                    </div>
+                    
+                    </div> 
+                </form>
+                <% } %>
             </div>
             <p>Pass: <%= hike.pass%></p>
         </div>

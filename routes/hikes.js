@@ -19,10 +19,10 @@ router.route('/weather')
 
 router.route('/:id')
     .get(catchAsync(hikes.showHike))
-    .put(isLoggedIn, isOwner, upload.array('image'), validateHike, catchAsync(hikes.updateHike))
+    .put(isLoggedIn, upload.array('image'), validateHike, catchAsync(hikes.updateHike))
     .delete(isLoggedIn, isOwner, catchAsync(hikes.deleteHike));
     
-router.get('/:id/edit', isLoggedIn, isOwner, catchAsync(hikes.getEditForm));
+router.get('/:id/edit', isLoggedIn, catchAsync(hikes.getEditForm));
 
 
 module.exports = router;

@@ -112,7 +112,11 @@ type="text/css"
             <div class="mb-3">
                 <% hike.images.forEach(function(image,i) { %> 
                      <div class="img-wrap">
-                        <span class="close">&times;</span>
+
+                        <% if(currentUser && (currentUser.admin || (image.owner) && (image.owner.equals(currentUser._id)))) { %>
+                            <span class="close">&times;</span>
+                        <% } %> 
+
                         <img src="<%=image.thumbnail%>" class="" alt="">
                             <input class="btn-check delete-image shadow-none" type="checkbox" id="img_<%=i%>" name="deleteImages[]" value="<%=image.filename%>" autocomplete="off">
                     </div>

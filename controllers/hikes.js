@@ -134,7 +134,7 @@ module.exports.createHike = async (req, res) => {
     
     const hike = new Hike(req.body.hike);
     hike.geometry = geoData.body.features[0].geometry;
-    hike.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    hike.images = req.files.map(f => ({ url: f.path, filename: f.filename, owner: req.user._id}));
     hike.owner = req.user._id;
 
     await hike.save();
@@ -160,7 +160,7 @@ module.exports.updateHike = async (req, res) => {
         limit: 1
     }).send();
     const hike = await Hike.findByIdAndUpdate(id, { ...req.body.hike });
-    const addedImages = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    const addedImages = req.files.map(f => ({ url: f.path, filename: f.filename, owner: req.user._id }));
     hike.images.push(...addedImages);
     hike.geometry = geoData.body.features[0].geometry;
 
