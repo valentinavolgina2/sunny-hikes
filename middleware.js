@@ -2,6 +2,9 @@ const { hikeValidSchema, reviewValidSchema} = require('./validationSchemas'); //
 const ExpressError = require('./utils/ExpressError'); // for error catching
 const Hike = require('./models/hike');
 const Review = require('./models/review');
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
 module.exports.isLoggedIn = (req, res, next) => { 
     if (!req.isAuthenticated()) { 
@@ -42,6 +45,37 @@ module.exports.validateHike = (req, res, next) => {
     } else { 
         next();
     }
+}
+
+module.exports.validateLocation = async (req, res, next) => { 
+    const { id} = req.params;
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.hike.location,
+        limit: 1
+    }).send();
+
+    const locationInfo = geoData.body.features[0].context;
+    if (locationInfo === 'undefined') {
+        req.flash('error', 'Cannot determine the location.');
+        if (typeof (id) == 'undefined') {
+            return res.redirect(`/hikes/new`);
+        } else { 
+            return res.redirect(`/hikes/${id}/edit`);
+        }
+    } else { 
+        const result = locationInfo.find(info => info.id.includes("region"));
+        if (typeof(result) === 'undefined' || result.text !== 'Washington') {
+            req.flash('error', 'Recreation must be in Washington State!');
+            if (typeof (id) == 'undefined') {
+                return res.redirect(`/hikes/new`);
+            } else { 
+                return res.redirect(`/hikes/${id}/edit`);
+            }
+        } 
+    };
+
+    next();
+    
 }
 
 module.exports.validateReview = (req, res, next) => { 

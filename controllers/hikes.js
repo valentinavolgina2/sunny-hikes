@@ -129,8 +129,7 @@ module.exports.createHike = async (req, res) => {
     const geoData = await geocoder.forwardGeocode({
         query: req.body.hike.location,
         limit: 1
-    }).send();
-
+    }).send(); 
     
     const hike = new Hike(req.body.hike);
     hike.geometry = geoData.body.features[0].geometry;
@@ -159,6 +158,7 @@ module.exports.updateHike = async (req, res) => {
         query: req.body.hike.location,
         limit: 1
     }).send();
+
     const hike = await Hike.findByIdAndUpdate(id, { ...req.body.hike });
     const addedImages = req.files.map(f => ({ url: f.path, filename: f.filename, owner: req.user._id }));
     hike.images.push(...addedImages);
@@ -263,6 +263,7 @@ function getMinuteDifference(day1, day2) {
     const diffMs = (day1 - day2); // milliseconds 
     return Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
 }
+
 
 async function updateHikeWeather(hike) { 
     try {

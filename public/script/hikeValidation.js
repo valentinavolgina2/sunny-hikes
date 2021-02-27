@@ -5,6 +5,8 @@
 
     const form = document.getElementById('hikeForm');
     const imageUpload = document.querySelector('#images');
+    const locationSearch = document.querySelector('.mapboxgl-ctrl-geocoder--input');
+    const locationInput = ( locationSearch == null) ? document.getElementById('location') : locationSearch;
     const maxImages = 5;
     let isValidFileExtension = true;
     const MAX_FILE_SIZE = 3 * 1024 * 1024// 3MB;
@@ -35,22 +37,33 @@
 
     form.addEventListener('submit', function (event) {
 
+        const isValidLocation = inWA(locationInput.value);
+        locationInput.classList.remove('is-invalid');
+        locationInput.classList.remove('is-valid');
+        if (!isValidLocation) {
+            console.log('not valid');
+            locationInput.classList.add('is-invalid');
+        } 
+
         imageUpload.classList.remove('is-invalid');
         imageUpload.classList.remove('is-valid');
-
         const isValidFilesNUmber = imageUpload.files.length + remainImages <= maxImages;
-        if (isValidFileExtension && isValidFileSize && isValidFilesNUmber) {
-            if (!form.checkValidity()) { 
+        const isValidImages = (isValidFileExtension && isValidFileSize && isValidFilesNUmber);
+        if (!isValidImages) { 
+            imageUpload.classList.add('is-invalid');
+        }
+
+        if (isValidLocation && isValidImages) {
+            if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
                 form.classList.add('was-validated');
-                console.log("not valid");
             }
         } else { 
-            event.preventDefault()
-            event.stopPropagation()
-            imageUpload.classList.add('is-invalid');
+            event.preventDefault();
+            event.stopPropagation();
         }
+
 
     }, false)
 
@@ -84,6 +97,18 @@
 
 })()
 
+function validateImages() { 
+
+}
+
+function inWA(location) { 
+    return (location.includes('Washington') || location.includes('WA'));
+}
+
+function validateLocation(locationInput) { 
+    return inWA(locationInput.value);
+}
+
 function checkFileExtensions(imageUpload) { 
     for (let file of imageUpload.files) { 
         const extension = file.name.match(/\.([^\.]+)$/)[1];
@@ -99,5 +124,6 @@ function checkFileExtensions(imageUpload) {
     }
     return true;
 }
+
 
 

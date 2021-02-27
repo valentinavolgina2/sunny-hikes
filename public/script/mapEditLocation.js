@@ -48,6 +48,15 @@ if (!mapboxgl.supported()) {
     locationSearchInput.value = location.value;
     locationSearchInput.classList.add('form-control');
     locationSearchInput.classList.add('map-border-custom');
+
+    const invalidFeddbackDiv = DomModule.createDiv('invalid-feedback');
+    invalidFeddbackDiv.innerHTML = "Address must be in Washington state.";
+    DomModule.insertAfter(invalidFeddbackDiv, locationSearchInput);
+
+    const validFeddbackDiv = DomModule.createDiv('valid-feedback');
+    validFeddbackDiv.innerHTML = "Looks good!";
+    DomModule.insertAfter(validFeddbackDiv, invalidFeddbackDiv);
+
     const locationInput = document.getElementById('location');
     locationSearchInput.addEventListener('change', function (e) {
         locationInput.value = locationSearchInput.value;

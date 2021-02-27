@@ -28,6 +28,9 @@ type="text/css"
                 <label class="form-label" for="location">Location</label>
                 <div id="geocoder" class="geocoder"></div> 
                 <input class="form-control shadow-none" type="text" id="location" name="hike[location]" maxlength="100" hidden required>
+                <div class="invalid-feedback">
+                    Address must be in Washington state.
+                </div>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
@@ -115,6 +118,7 @@ type="text/css"
 <script>
     const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
 </script>
+<script src="/script/dom.js"></script>
 <script src="/script/textareaFitContent.js"></script>
 <script src="/script/mapEditLocation.js"></script>
 <script src="/script/hikeValidation.js"></script>
