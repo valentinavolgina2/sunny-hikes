@@ -24,6 +24,7 @@ type="text/css"
                     Looks good!
                 </div>
             </div>
+            
             <div class="mb-3">
                 <label class="form-label" for="location">Location</label>
                 <div id="geocoder" class="geocoder"></div> 
@@ -37,6 +38,9 @@ type="text/css"
                 <div id="location-map" class="mt-3"></div>
                
             </div>
+
+
+
             <div class="mb-3">
                 <label class="form-label" for="pass">Pass</label>
                 <select class="form-select shadow-none" id="pass" name="hike[pass]">
@@ -96,7 +100,7 @@ type="text/css"
             </div>
             <div class="mb-3">
                 <label for="images" class="form-label">Photos</label>
-                <input class="form-control shadow-none" type="file" name="image" id="images" accept=".jpeg, .jpg, .png" multiple>
+                <input class="form-control shadow-none" name="image" type="file" id="images" accept=".jpeg, .jpg, .png" multiple>
                 <div class="invalid-feedback">
                     You can upload up to 5 images, each file must be at most 3MB (.jpg, .jpeg, .png only).
                 </div>

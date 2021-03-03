@@ -6,6 +6,7 @@ const passes = require('./pass');
 const conditions = require('./weather');
 const restrooms = require('./restroom');
 const activities = require('./activity');
+const { cloudinary } = require('../cloudinary');
 
 const ImageSchema = new Schema({
     url: String,
@@ -105,6 +106,10 @@ HikeSchema.virtual('properties.popUpMarkup').get(function () {
 HikeSchema.post('findOneAndDelete', async function (doc) { 
     if (doc) { 
         await Review.deleteMany({ _id: { $in: doc.reviews } });
+
+        for (let img of doc.images) { 
+            await cloudinary.uploader.destroy(img.filename);
+        }
     }
 });
 

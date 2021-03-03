@@ -63,6 +63,7 @@ module.exports.hikeValidSchema = Joi.object({
             })
         })
     }).required(),
+    image: Joi.string().escapeHTML(),
     deleteImages: Joi.array()
 })
 

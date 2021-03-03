@@ -6,6 +6,59 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
+const multer = require('multer');
+const { storage } = require('./cloudinary');
+
+const validLocation = async (req) => { 
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.hike.location,
+        limit: 1
+    }).send();
+
+    const locationInfo = geoData.body.features[0].context;
+    if (locationInfo === 'undefined') {
+        req.flash('error', 'Cannot determine the location.');
+        return false;
+    } else { 
+        const result = locationInfo.find(info => info.id.includes("region"));
+        if (typeof(result) === 'undefined' || result.text !== 'Washington') {
+            req.flash('error', 'Recreation must be in Washington State!');
+            return false;
+        } 
+    }
+    return true;
+}
+
+const validHikeData = (req) => { 
+    let activities = (req.body.hike.activities) ? req.body.hike.activities : [];
+    if (!Array.isArray(activities)) activities = [activities];
+    req.body.hike.activities = activities;
+
+    const { error } = hikeValidSchema.validate(req.body);
+    if (error) {
+        const message = error.details.map(el => el.message).join(',');
+        req.flash('error', message);
+        return false;
+    } else { 
+        return true;
+    }
+}
+
+async function hasValidData (req) {
+    const validLocationData = await validLocation(req);
+    return validLocationData && validHikeData(req);
+}
+
+const upload = multer({
+    fileFilter: async function (req, file, cb) {
+        const validationSucceeded = await hasValidData(req);
+        req.body.validation = validationSucceeded;
+        cb(null, validationSucceeded)
+    },
+    storage,
+    limits: { fileSize: 3000000 }
+}).array('image', 5);
+
 module.exports.isLoggedIn = (req, res, next) => { 
     if (!req.isAuthenticated()) { 
         req.session.returnTo = req.originalUrl;
@@ -33,49 +86,33 @@ module.exports.isOwner = async (req, res, next) => {
     next();
 }
 
-module.exports.validateHike = (req, res, next) => { 
-    let activities = (req.body.hike.activities) ? req.body.hike.activities : [];
-    if (!Array.isArray(activities)) activities = [activities];
-    req.body.hike.activities = activities;
+module.exports.uploadImages = (req, res, next) => { 
+    upload(req, res, function (err) {
+        if (err) {
+            req.flash('error', 'Error! You can upload up to 5 images, each file must be at most 3MB (.jpg, .jpeg, .png only).');
+            return res.redirect(`/hikes`);
+        }
 
-    const { error } = hikeValidSchema.validate(req.body);
-    if (error) {
-        const message = error.details.map(el => el.message).join(',');
-        throw new ExpressError(message, 400);
+        next();
+    })
+}
+
+module.exports.validateHike = (req, res, next) => { 
+    if (typeof (req.body.validation) != 'undefined') {
+        next();
     } else { 
+        req.body.validation = validHikeData(req);
         next();
     }
 }
 
 module.exports.validateLocation = async (req, res, next) => { 
-    const { id} = req.params;
-    const geoData = await geocoder.forwardGeocode({
-        query: req.body.hike.location,
-        limit: 1
-    }).send();
-
-    const locationInfo = geoData.body.features[0].context;
-    if (locationInfo === 'undefined') {
-        req.flash('error', 'Cannot determine the location.');
-        if (typeof (id) == 'undefined') {
-            return res.redirect(`/hikes/new`);
-        } else { 
-            return res.redirect(`/hikes/${id}/edit`);
-        }
+    if (typeof (req.body.validation) != 'undefined') { 
+        next();
     } else { 
-        const result = locationInfo.find(info => info.id.includes("region"));
-        if (typeof(result) === 'undefined' || result.text !== 'Washington') {
-            req.flash('error', 'Recreation must be in Washington State!');
-            if (typeof (id) == 'undefined') {
-                return res.redirect(`/hikes/new`);
-            } else { 
-                return res.redirect(`/hikes/${id}/edit`);
-            }
-        } 
-    };
-
-    next();
-    
+        req.body.validation = await validLocation(req);
+        next();
+    }
 }
 
 module.exports.validateReview = (req, res, next) => { 

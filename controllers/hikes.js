@@ -126,19 +126,24 @@ module.exports.showHike = async (req, res) => {
 }
 
 module.exports.createHike = async (req, res) => {
-    const geoData = await geocoder.forwardGeocode({
-        query: req.body.hike.location,
-        limit: 1
-    }).send(); 
     
-    const hike = new Hike(req.body.hike);
-    hike.geometry = geoData.body.features[0].geometry;
-    hike.images = req.files.map(f => ({ url: f.path, filename: f.filename, owner: req.user._id}));
-    hike.owner = req.user._id;
-
-    await hike.save();
-    req.flash('success', 'Successfully made a new recommendation!');
-    res.redirect(`/hikes/${hike._id}`);
+    if (typeof (req.body.validation) == 'undefined' || req.body.validation) {
+        const geoData = await geocoder.forwardGeocode({
+            query: req.body.hike.location,
+            limit: 1
+        }).send();
+        
+        const hike = new Hike(req.body.hike);
+        hike.geometry = geoData.body.features[0].geometry;
+        hike.images = req.files.map(f => ({ url: f.path, filename: f.filename, owner: req.user._id }));
+        hike.owner = req.user._id;
+    
+        await hike.save();
+        req.flash('success', 'Successfully made a new recreation!');
+        res.redirect(`/hikes/${hike._id}`);
+    } else { 
+        res.redirect(`/hikes/new`);
+    }
 
 }
 
@@ -154,32 +159,36 @@ module.exports.getEditForm = async (req, res) => {
 
 module.exports.updateHike = async (req, res) => { 
     const { id } = req.params;
-    const geoData = await geocoder.forwardGeocode({
-        query: req.body.hike.location,
-        limit: 1
-    }).send();
+    if (typeof (req.body.validation) == 'undefined' || req.body.validation) {
+        const geoData = await geocoder.forwardGeocode({
+            query: req.body.hike.location,
+            limit: 1
+        }).send();
 
-    const hike = await Hike.findByIdAndUpdate(id, { ...req.body.hike });
-    const addedImages = req.files.map(f => ({ url: f.path, filename: f.filename, owner: req.user._id }));
-    hike.images.push(...addedImages);
-    hike.geometry = geoData.body.features[0].geometry;
+        const hike = await Hike.findByIdAndUpdate(id, { ...req.body.hike });
+        const addedImages = req.files.map(f => ({ url: f.path, filename: f.filename, owner: req.user._id }));
+        hike.images.push(...addedImages);
+        hike.geometry = geoData.body.features[0].geometry;
 
-    await hike.save();
-    if (req.body.deleteImages) { 
-        for (let img of req.body.deleteImages) { 
-            await cloudinary.uploader.destroy(img);
+        await hike.save();
+        if (req.body.deleteImages) {
+            for (let img of req.body.deleteImages) {
+                await cloudinary.uploader.destroy(img);
+            }
+            await hike.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } });
         }
-        await hike.updateOne({ $pull: { images: { filename: {$in: req.body.deleteImages}}}});
-    }
 
-    req.flash('success', 'Successfully updated the recommendation!');
-    res.redirect(`/hikes/${hike._id}`);
+        req.flash('success', 'Successfully updated the recreation!');
+        res.redirect(`/hikes/${hike._id}`);
+    } else { 
+        res.redirect(`/hikes/${id}/edit`);
+    }
 }
 
 module.exports.deleteHike = async (req, res) => { 
     const { id } = req.params;
-    const hike = await Hike.findByIdAndDelete(id);
-    req.flash('success', 'The recommendation has been deleted!');
+    await Hike.findByIdAndDelete(id);
+    req.flash('success', 'The recreation has been deleted!');
     res.redirect("/hikes");
 }
 

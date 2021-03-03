@@ -64,7 +64,6 @@
             event.stopPropagation();
         }
 
-
     }, false)
 
     if (closeSpans) { 
@@ -96,10 +95,6 @@
     }
 
 })()
-
-function validateImages() { 
-
-}
 
 function inWA(location) { 
     return (location.includes('Washington') || location.includes('WA'));

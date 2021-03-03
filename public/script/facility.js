@@ -8,7 +8,7 @@ function createHiddenFacilities() {
         hiddenField.id = facilityInput.id+"hidden";
         hiddenField.name = `hike[facilities][${facilityInput.id}]`;
         hiddenField.value = facilityInput.checked;
-        form.appendChild(hiddenField);
+        DomModule.insertAfter(hiddenField, facilityInput);
     
         facilityInput.addEventListener('change', function (e) { 
             const hiddenInput = document.getElementById(facilityInput.id+"hidden");
