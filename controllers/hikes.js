@@ -122,7 +122,7 @@ module.exports.showHike = async (req, res) => {
 
     const previousPage = (page - 1);
     const nextPage = (nextReviewHike.reviews.length === 0) ? -1 : (page + 1);
-    res.render('hikes/show', { hike: hike, nextPage: nextPage, previousPage: previousPage, now: new Date()});
+    res.render('hikes/show', { hike: hike, nextPage: nextPage, previousPage: previousPage});
 }
 
 module.exports.createHike = async (req, res) => {
@@ -262,10 +262,7 @@ function getDateWithoutTime() {
     var date = new Date();
     date.setHours(0, 0, 0, 0);
 
-    const timeZoneOffset = date.getTimezoneOffset();
-    const utcDate = new Date(date.getTime() - timeZoneOffset*60*1000)
-
-    return utcDate;
+    return date;
 }
 
 function getMinuteDifference(day1, day2) { 
