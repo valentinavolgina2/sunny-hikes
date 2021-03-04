@@ -18,7 +18,7 @@ type="text/css"
 
         <form action="/hikes/<%= hike._id%>?_method=PUT" method="POST" novalidate id="hikeForm" enctype="multipart/form-data">
             <div class="mb-3">
-                <label class="form-label" for="title">Title</label>
+                <label class="form-label" for="title">Title*</label>
                 <input class="form-control shadow-none" type="text" id="title" name="hike[title]" value="<%= hike.title%>" maxlength="100" required>
                 <div class="valid-feedback">
                     Looks good!
@@ -91,7 +91,7 @@ type="text/css"
                 <textarea class="form-control shadow-none textarea-fit" type="text" id="description" name="hike[description]" maxlength="1000"><%= hike.description%></textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="location">Location</label>
+                <label class="form-label" for="location">Location*</label>
                 <div id="geocoder" class="geocoder"></div> 
                 <input class="form-control shadow-none" type="text" id="location" name="hike[location]" value="<%= hike.location%>" maxlength="100"  hidden required>
                 <div class="invalid-feedback">

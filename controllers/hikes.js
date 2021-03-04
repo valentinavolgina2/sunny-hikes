@@ -122,7 +122,7 @@ module.exports.showHike = async (req, res) => {
 
     const previousPage = (page - 1);
     const nextPage = (nextReviewHike.reviews.length === 0) ? -1 : (page + 1);
-    res.render('hikes/show', { hike: hike, nextPage: nextPage, previousPage: previousPage});
+    res.render('hikes/show', { hike: hike, nextPage: nextPage, previousPage: previousPage, now: new Date()});
 }
 
 module.exports.createHike = async (req, res) => {
