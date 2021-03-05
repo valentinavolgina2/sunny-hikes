@@ -33,6 +33,7 @@ module.exports.hikeValidSchema = Joi.object({
         description: Joi.string().optional().allow('').max(1000, 'utf8').escapeHTML(),
         location: Joi.string().max(100, 'utf8').required().escapeHTML(),
         pass: Joi.string().required().escapeHTML().valid(...Object.values(passes)),
+        fee: Joi.number().min(0).max(1000),
         facilities: Joi.object({
             noPets:  Joi.boolean(),
             beachAccess:  Joi.boolean(),

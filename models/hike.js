@@ -49,6 +49,7 @@ const HikeSchema = new Schema({
         }
     ],
     pass: [...Object.values(passes)],
+    fee: Number,
     facilities: {
         noPets: Boolean,
         beachAccess: Boolean,
