@@ -29,44 +29,69 @@ module.exports.list = async (req, res) => {
     
     const day = (req.query.date) ? new Date(parseInt(req.query.date)) : new Date();
     const allConditions = getValues(conditions);
-    let conditionFilter = (req.query.conditionFilter) ? req.query.conditionFilter : allConditions;
+    const allActivities = getValues(activities);
+    let conditionFilter = (req.query.conditionFilter) ? req.query.conditionFilter : [];
     if (!Array.isArray(conditionFilter)) conditionFilter = [conditionFilter];
     const { long, lat } = await getSearchCenter(location);
 
-    //https://stackoverflow.com/questions/25584279/combine-geonear-query-with-another-query-for-a-value
-    let query;
-    if (conditionFilter.includes(conditions.NONE)) {
-        query = {
-            $or: [{ "weather.1": { $exists: false } }, {
-                weather: {
-                    $elemMatch: {
-                        main: { $in: conditionFilter }, day: {
-                            $gte: new Date(new Date(day).setHours(00, 00, 00)),
-                            $lt: new Date(new Date(day).setHours(23, 59, 59))
-                        }
-                    }
-                }
-            }],
-            
-        };
-    } else { 
-        query = {
-            $and: [{ "weather.1": { $exists: true } }, {
-                weather: {
-                    $elemMatch: {
-                        main: { $in: conditionFilter }, day: {
-                            $gte: new Date(new Date(day).setHours(00, 00, 00)),
-                            $lt: new Date(new Date(day).setHours(23, 59, 59))
-                        }
-                    }
-                }
-            }],
-            
-        }
-    }
+    let activityFilter = (req.query.activity) ? req.query.activity : [];
+    if (!Array.isArray(activityFilter)) activityFilter = [activityFilter];
 
+    const beachAccessFilter = (req.query.beachAccess) ? req.query.beachAccess : false;
+    const picnicAreaFilter = (req.query.picnicArea) ? req.query.picnicArea : false;
+    const barbequeFilter = (req.query.barbeque) ? req.query.barbeque : false;
+
+//    console.log(req.query);
+    //https://stackoverflow.com/questions/25584279/combine-geonear-query-with-another-query-for-a-value
+    let query = {};
+    if (conditionFilter.length > 0) {
+        if (conditionFilter.includes(conditions.NONE)) {
+            query = {
+                $or: [{ "weather.1": { $exists: false } }, {
+                    weather: {
+                        $elemMatch: {
+                            main: { $in: conditionFilter }, day: {
+                                $gte: new Date(new Date(day).setHours(00, 00, 00)),
+                                $lt: new Date(new Date(day).setHours(23, 59, 59))
+                            }
+                        }
+                    }
+                }],
+                
+            };
+        } else { 
+            query = {
+                $and: [{ "weather.1": { $exists: true } }, {
+                    weather: {
+                        $elemMatch: {
+                            main: { $in: conditionFilter }, day: {
+                                $gte: new Date(new Date(day).setHours(00, 00, 00)),
+                                $lt: new Date(new Date(day).setHours(23, 59, 59))
+                            }
+                        }
+                    }
+                }],
+                
+            }
+        }        
+    }
+    
     if (myHikes) { 
         query.owner = req.user._id;
+    }
+
+    if (activityFilter.length > 0) {
+        query.activities = { $in: activityFilter };
+    }
+
+    if (beachAccessFilter) {
+        query["facilities.beachAccess"]= true;
+    }
+    if (picnicAreaFilter) {
+        query["facilities.picnicArea"]=true;
+    }
+    if (barbequeFilter) {
+        query["facilities.barbeque"]=true;
     }
 
     let hikes = await Hike.aggregate([
@@ -89,7 +114,7 @@ module.exports.list = async (req, res) => {
         return new Hike(d);
     });
 
-    res.render('hikes/index', { hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day.getTime(), conditions: conditionFilter, mine: myHikes}, conditions: allConditions});
+    res.render('hikes/index', { hikes: hikes, filter: {location: location, distance: distance, long: long, lat: lat, forecastDay: day.getTime(), conditions: conditionFilter, activities: activityFilter, mine: myHikes, beachAccess: beachAccessFilter, picnicArea: picnicAreaFilter, barbeque: barbequeFilter}, conditions: allConditions, activities: allActivities});
 
 }
 

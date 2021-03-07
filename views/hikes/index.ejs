@@ -5,17 +5,99 @@
         <div class="col-xl-9 col-md-8 mb-3">
             <input hidden class="form-check-input" type="checkbox" name="mine" <% if(filter.mine) {%> checked<% }%>>
 
-            <div class="row">
-                <% for(let i = 0; i < 6; i++) { %> 
-                <div class="col-xxl-2 col-lg-3 col-6 py-1">
-                    <label class="colored-checkbox-lbl"><%=conditions[i]%>
-                        <input class="form-check-input colored-checkbox" type="checkbox" id="<%=conditions[i]%>" name="conditionFilter" value="<%=conditions[i]%>" <% if(filter.conditions.includes(conditions[i])) { %> checked <% }%>  >
-                        <span class="checkmark checkmark-blue"></span>
-                    </label>
+            <div class="row mb-2">
+
+                <div class="accordion " id="accordionFacility">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingFacility">
+                        <button class="accordion-button py-2 shadow-none text-dark bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFacility" aria-expanded="true" aria-controls="collapseFacility">
+                          Facility
+                        </button>
+                      </h2>
+                      <div id="collapseFacility" class="accordion-collapse collapse" aria-labelledby="headingFacility" data-bs-parent="#accordionFacility">
+                        <div class="accordion-body">
+                            <div class="row">
+                                <div class="col-xxl-2 col-lg-3 col-6 py-1">
+                                    <input class="form-check-input" type="checkbox" id="beachAccess" name="beachAccess" value="beachAccess" <% if(filter.beachAccess) { %> checked <% }%>  >
+                                    <label class="form-check-label" for="beachAccess">Beach access</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xxl-2 col-lg-3 col-6 py-1">
+                                    <input class="form-check-input" type="checkbox" id="picnicArea" name="picnicArea" value="picnicArea" <% if(filter.picnicArea) { %> checked <% }%>  >
+                                    <label class="form-check-label" for="picnicArea">Picnic area</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xxl-2 col-lg-3 col-6 py-1">
+                                    <input class="form-check-input" type="checkbox" id="barbeque" name="barbeque" value="barbeque" <% if(filter.barbeque) { %> checked <% }%>  >
+                                    <label class="form-check-label" for="barbeque">Barbeque</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            <% } %> 
+                </div>
+
+                
             </div>
+
+            <div class="row mb-2">
+
+                <div class="accordion " id="accordionActivity">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingActivity">
+                        <button class="accordion-button py-2 shadow-none text-dark bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseActivity" aria-expanded="true" aria-controls="collapseActivity">
+                          Activity
+                        </button>
+                      </h2>
+                      <div id="collapseActivity" class="accordion-collapse collapse" aria-labelledby="headingActivity" data-bs-parent="#accordionActivity">
+                        <div class="accordion-body">
+                            <div class="row">
+                                <% for(let activity of activities) { %> 
+                                    <div class="col-xxl-2 col-lg-3 col-6 py-1">
+                                        <input class="form-check-input" type="checkbox" id="<%=activity%>" name="activity" value="<%=activity%>" <% if(filter.activities.includes(activity)) { %> checked <% }%>  >
+                                        <label class="form-check-label" for="<%=activity.replace(/\s/g,'')%>"><%=activity%></label>
+                                    </div>
+                                <% } %>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                
+            </div>
+
             <div class="row">
+
+                <div class="accordion " id="accordionWeather">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingWeather">
+                        <button class="accordion-button py-2 shadow-none text-dark bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWeather" aria-expanded="true" aria-controls="collapseWeather">
+                          Weather
+                        </button>
+                      </h2>
+                      <div id="collapseWeather" class="accordion-collapse collapse" aria-labelledby="headingWeather" data-bs-parent="#accordionWeather">
+                        <div class="accordion-body">
+                            <div class="row">
+                                <% for(let condition of conditions) { %> 
+                                    <div class="col-xxl-2 col-lg-3 col-6 py-1">
+                                        <label class="colored-checkbox-lbl"><%=condition%>
+                                            <input class="form-check-input colored-checkbox" type="checkbox" id="<%=condition%>" name="conditionFilter" value="<%=condition%>" <% if(filter.conditions.includes(condition)) { %> checked <% }%>  >
+                                            <span class="checkmark checkmark-blue"></span>
+                                        </label>
+                                    </div>
+                                    <% } %> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                
+            </div>
+            <!-- <div class="row">
 
                 <div class="accordion " id="accordionExample">
                     <div class="accordion-item">
@@ -43,7 +125,7 @@
                     </div>
                 </div>
                 </div>
-            </div>
+            </div> -->
                            
         </div>
         <div class="col-xl-3 col-md-4 mb-3">
